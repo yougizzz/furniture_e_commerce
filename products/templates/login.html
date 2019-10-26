@@ -1,0 +1,26 @@
+{%  include 'header.html' %}
+
+<div class="register-area ptb-100">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 col-12 col-lg-6 col-xl-6 ml-auto mr-auto">
+                <div class="login">
+                    <div class="login-form-container">
+                        <div class="login-form">
+                            <form action="#" method="post">
+                                {% csrf_token %}
+                                {{ form.as_p }}
+                                <div class="button-box">
+                                    <button type="submit" class="default-btn floatright">Login</button>
+                                </div>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+{% include 'footer.html' %}
