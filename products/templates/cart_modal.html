@@ -1,0 +1,42 @@
+{% load staticfiles %}
+{% load static %}
+<div class="sidebar-cart onepage-sidebar-area">
+    <div class="wrap-sidebar">
+        <div class="sidebar-cart-all">
+            <div class="sidebar-cart-icon">
+                <button class="op-sidebar-close"><span class="ion-android-close"></span></button>
+            </div>
+            <div class="cart-content">
+                <h3>Shopping Cart</h3>
+                <ul>
+                    {% if cart is not None %}
+                        {% for product in cart %}
+                            <li class="single-product-cart">
+                                <div class="cart-img">
+                                    <a href="#">
+                                        <img src="{{ product.item.mainImage.url }}" alt="" height="100" width="100">
+                                    </a>
+                                </div>
+                                <div class="cart-title">
+                                    <h3><a href="#"> {{ product.item.name }}</a></h3>
+                                    <span>{{ product.quantity }} x ${{ product.item.price }}</span>
+                                </div>
+{#                                <div class="cart-delete">#}
+{#                                    <a href="/remove_cart/{{ product.item.id }}"><i class="ion-ios-trash-outline"></i></a>#}
+{#                                </div>#}
+                            </li>
+                        {% endfor %}
+                    {% endif %}
+                    <li class="single-product-cart">
+                        <div class="cart-checkout-btn">
+                            {% if request.user.is_authenticated %}
+                                <a class="btn-hover cart-btn-style" href="/cart">view cart</a>
+                                <a class="no-mrg btn-hover cart-btn-style" href="#">checkout</a>
+                            {% endif %}
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

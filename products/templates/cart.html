@@ -1,0 +1,82 @@
+{% include 'header.html' %}
+{% load staticfiles %}
+{% load static %}
+<div class="cart-main-area pt-95 pb-100">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <h1 class="cart-heading">Cart</h1>
+                <form action="#">
+                    <div class="table-content table-responsive">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th class="product-name">remove</th>
+                                <th class="product-price">images</th>
+                                <th class="product-name">Product</th>
+                                <th class="product-price">Price</th>
+                                <th class="product-quantity">Quantity</th>
+                                <th class="product-subtotal">Total</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for product in cart %}
+                                <tr>
+                                    {#                                    <td class="product-remove"><a href="/remove_cart/{{ product.item.id }}"><i class="ion-android-close"></i></a></td>#}
+                                    <td class="product-remove">
+                                        <a href="#" data-toggle="modal" data-target="#cartConfirm">
+                                            <i class="ion-android-close"></i>
+                                        </a>
+                                    </td>
+                                    <td class="product-thumbnail">
+                                        <a href="#"><img src={{ product.item.mainImage.url }} alt="" height="100"
+                                                         width="100"></a>
+                                    </td>
+                                    <td class="product-name"><a href="#">{{ product.item.name }}</a></td>
+                                    <td class="product-price"><span class="amount">${{ product.item.price }}</span></td>
+                                    <td class="product-quantity">
+                                        <input value={{ product.quantity }} type="number">
+                                    </td>
+                                    <td class="product-subtotal">${{ product.get_total }}</td>
+
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="coupon-all">
+                                <div class="coupon">
+                                    <input id="coupon_code" class="input-text" name="coupon_code" value=""
+                                           placeholder="Coupon code" type="text">
+                                    <input class="button" name="apply_coupon" value="Apply coupon" type="submit">
+                                </div>
+                                <div class="coupon2">
+                                    <input class="button" name="update_cart" value="Update cart" type="submit">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-5 ml-auto">
+                            <div class="cart-page-total">
+                                {% block content %}
+                                    <h2>Cart totals</h2>
+                                    <ul>
+                                        {#                                    <li>Subtotal<span>100.00</span></li>#}
+                                        <li>Total<span>$ {{ total }}</span></li>
+                                    </ul>
+                                    <a href="/order">Proceed to checkout</a>
+                                {% endblock %}
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% include 'cart_modal_confirm.html' %}
+
+{% include 'footer.html' %}
