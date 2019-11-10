@@ -33,9 +33,9 @@
                         <div class="product-details-large tab-content">
                             <div class="tab-pane active show fade" id="pro-details1" role="tabpanel">
 
-                                    <a href="{% static 'assets/img/product-details/bl1.jpg' %}">
-                                        <img src="{{ product.mainImage.url }}" alt="">
-                                    </a>
+                                <a href="{% static 'assets/img/product-details/bl1.jpg' %}">
+                                    <img src="{{ product.mainImage.url }}" alt="">
+                                </a>
 
                             </div>
                             <div class="tab-pane fade" id="pro-details2" role="tabpanel">
@@ -60,21 +60,6 @@
                                 </div>
                             </div>
                         </div>
-{#                        <div class="product-details-small nav mt-12 main-product-details" role=tablist>#}
-{#                            <a class="active mr-12" href="#pro-details1" data-toggle="tab" role="tab"#}
-{#                               aria-selected="true">#}
-{#                                <img src="{% static 'assets/img/product-details/s1.jpg' %}" alt="">#}
-{#                            </a>#}
-{#                            <a class="mr-12" href="#pro-details2" data-toggle="tab" role="tab" aria-selected="true">#}
-{#                                <img src="{% static 'assets/img/product-details/s2.jpg' %}" alt="">#}
-{#                            </a>#}
-{#                            <a class="mr-12" href="#pro-details3" data-toggle="tab" role="tab" aria-selected="true">#}
-{#                                <img src="{% static 'assets/img/product-details/s3.jpg' %}" alt="">#}
-{#                            </a>#}
-{#                            <a class="mr-12" href="#pro-details4" data-toggle="tab" role="tab" aria-selected="true">#}
-{#                                <img src="{% static 'assets/img/product-details/s4.jpg' %}" alt="">#}
-{#                            </a>#}
-{#                        </div>#}
                     </div>
                 </div>
             </div>
@@ -99,20 +84,36 @@
                         </div>
                         <p>{{ product.description }}</p>
                         <div class="quickview-plus-minus">
-                            <form action="/add_cart/{{ product.id }}" method="post" class="form-inline">
-                                {% csrf_token %}
+                            {% if request.user.is_authenticated %}
+                                <form action="/add_cart/{{ product.id }}" method="post" class="form-inline">
+                                    {% csrf_token %}
+                                    <div class="cart-plus-minus">
+                                        <input type="text" value="02" name="qtybutton" class="cart-plus-minus-box">
+                                    </div>
+
+                                    <div class="quickview-btn-cart">
+                                        <button class="btn-hover cart-btn-style list-btn-style" type="submit">
+                                            add to cart
+                                        </button>
+                                    </div>
+                                    <div class="quickview-btn-wishlist">
+                                        <a class="btn-hover" href="#"><i class="ion-ios-heart-outline"></i></a>
+                                    </div>
+                                </form>
+                            {% else %}
                                 <div class="cart-plus-minus">
                                     <input type="text" value="02" name="qtybutton" class="cart-plus-minus-box">
                                 </div>
-
-                            <div class="quickview-btn-cart">
-                                <button class="btn-hover cart-btn-style list-btn-style" type="submit" >add to cart</button>
-                            </div>
-
-                            <div class="quickview-btn-wishlist">
-                                <a class="btn-hover" href="#"><i class="ion-ios-heart-outline"></i></a>
-                            </div>
-                                </form>
+                                <div class="quickview-btn-cart">
+                                    <button data-toggle="modal" class="btn-hover cart-btn-style list-btn-style"
+                                            data-target="#requireLogin" type="button">
+                                        add to cart
+                                    </button>
+                                </div>
+                                <div class="quickview-btn-wishlist">
+                                    <a class="btn-hover" href="#"><i class="ion-ios-heart-outline"></i></a>
+                                </div>
+                            {% endif %}
                         </div>
                         <div class="product-categories product-cat-tag">
                             <ul>
@@ -322,7 +323,7 @@
         </div>
     </div>
 </div>
-
+{% include 'modal_require_login.html' %}
 
 <script src="{% static 'assets/js/vendor/jquery-1.12.0.min.js' %}"></script>
 <script src="{% static 'assets/js/vendor/popper.js' %}"></script>

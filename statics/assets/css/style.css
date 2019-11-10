@@ -778,7 +778,7 @@
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
       -ms-flex-pack: justify;
-          justify-content: space-between;
+          justify-content: center;
 }
 .product-title > h4 {
   color: #5d5d5d;
@@ -4309,8 +4309,8 @@ h5.panel-title {
 }
 .panel.panel-default {
   margin-bottom: 20px;
-}
 
+}
 
 /*--------- 23. Login page ---------*/
 .login-form-container {

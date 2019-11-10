@@ -21,7 +21,7 @@
 <body>
 
 
-<header class="pl-155 pr-155 intelligent-header">
+<header class="pl-155 pr-155 intelligent-header" style="background-color: #f5f5f5">
     <div class="header-area header-area-2">
         <div class="container-fluid p-0">
             <div class="row no-gutters">
@@ -37,21 +37,6 @@
                                 <li><a href="/">home</a></li>
                                 <li><a href="#">about us</a></li>
                                 <li><a href="#">shop</a></li>
-{#                                <li><a href="#">pages</a>#}
-{#                                    <ul class="dropdown">#}
-{#                                        <li><a href="about-us.html">about us</a></li>#}
-{#                                        <li><a href="cart.html">cart</a></li>#}
-{#                                        <li><a href="checkout.html">checkout</a></li>#}
-{#                                        <li><a href="wishlist.html">wishlist</a></li>#}
-{#                                        <li><a href="contact.html">contact</a></li>#}
-{#                                        {% if request.user.is_authenticated %}#}
-{#                                            <li><a href="/logout">logout</a></li>#}
-{#                                        {% else %}#}
-{#                                            <li><a href="/register">register</a></li>#}
-{#                                            <li><a href="/login">Sign In </a></li>#}
-{#                                        {% endif %}#}
-{#                                    </ul>#}
-{#                                </li>#}
                                 <li><a href="#">blog</a>
                                     <ul class="dropdown">
                                         <li><a href="#">blog </a></li>
@@ -75,6 +60,13 @@
                                 <span class="ion-bag"></span>
                             </button>
                         </div>
+                        {% if request.user.is_authenticated %}
+                            <div class="header-sidebar common-style">
+                                <button class="header-navbar-active">
+                                    <span class="ion-person"></span>
+                                </button>
+                            </div>
+                        {% endif %}
                         <div class="header-sidebar common-style">
                             <button class="header-navbar-active">
                                 <span class="ion-navicon"></span>
@@ -82,64 +74,64 @@
                         </div>
                     </div>
                 </div>
-                <div class="mobile-menu-area d-md-block col-md-12 col-lg-12 col-12 d-lg-none d-xl-none">
-                    <div class="mobile-menu">
-                        <nav id="mobile-menu-active">
-                            <ul class="menu-overflow">
-                                <li><a href="#">HOME</a>
-                                    <ul>
-                                        <li><a href="index.html">furniture</a></li>
-                                        <li><a href="index-electronics.html">electronics</a></li>
-                                        <li><a href="index-fashion.html">fashion</a></li>
-                                        <li><a href="index-jewellery.html">jewellery</a></li>
-                                        <li><a href="index-food-drink.html">food & drink</a></li>
-                                        <li><a href="index-toys.html">Toys & Games</a></li>
-                                    </ul>
-                                </li>
-                                <li><a href="#">pages</a>
-                                    <ul>
-                                        <li><a href="about-us.html">about us</a></li>
-                                        <li><a href="cart.html">cart</a></li>
-                                        <li><a href="checkout.html">checkout</a></li>
-                                        <li><a href="wishlist.html">wishlist</a></li>
-                                        <li><a href="contact.html">contact</a></li>
-                                        <li><a href="login.html">login</a></li>
-                                        <li><a href="register.html">register</a></li>
-                                    </ul>
-                                </li>
-                                <li><a href="#">shop</a>
-                                    <ul>
-                                        <li><a href="shop-grid-view-3-col.html">grid 3 column</a></li>
-                                        <li><a href="shop-grid-view-5-col.html">grid 5 column</a></li>
-                                        <li><a href="shop-grid-view-sidebar.html">grid with sidebar</a></li>
-                                        <li><a href="shop-list-view-1-col.html">list 1 column</a></li>
-                                        <li><a href="shop-list-view-2-col.html">list 2 column</a></li>
-                                        <li><a href="shop-list-view-sidebar.html">list with sidebar</a></li>
-                                        <li><a href="shop-list-view-1-col-container.html">list 1 column box</a></li>
-                                        <li><a href="product-details.html">tab style 1</a></li>
-                                        <li><a href="product-details-2.html">tab style 2</a></li>
-                                        <li><a href="product-details-3.html">tab style 3</a></li>
-                                        <li><a href="product-details-6.html">sticky style</a></li>
-                                        <li><a href="product-details-7.html">sticky style 2</a></li>
-                                        <li><a href="product-details-8.html">gallery style</a></li>
-                                        <li><a href="product-details-9.html">gallery style 2</a></li>
-                                        <li><a href="product-details-4.html">fixed image style</a></li>
-                                        <li><a href="product-details-5.html">fixed image style 2</a></li>
-                                    </ul>
-                                </li>
-                                <li><a href="#">BLOG</a>
-                                    <ul>
-                                        <li><a href="blog.html">blog </a></li>
-                                        <li><a href="blog-2-col.html">blog 2 column</a></li>
-                                        <li><a href="blog-left-sidebar.html">blog left sidebar</a></li>
-                                        <li><a href="blog-details.html">blog details</a></li>
-                                    </ul>
-                                </li>
-                                <li><a href="contact.html"> Contact </a></li>
-                            </ul>
-                        </nav>
-                    </div>
-                </div>
+                {#                <div class="mobile-menu-area d-md-block col-md-12 col-lg-12 col-12 d-lg-none d-xl-none">#}
+                {#                    <div class="mobile-menu">#}
+                {#                        <nav id="mobile-menu-active">#}
+                {#                            <ul class="menu-overflow">#}
+                {#                                <li><a href="#">HOME</a>#}
+                {#                                    <ul>#}
+                {#                                        <li><a href="index.html">furniture</a></li>#}
+                {#                                        <li><a href="index-electronics.html">electronics</a></li>#}
+                {#                                        <li><a href="index-fashion.html">fashion</a></li>#}
+                {#                                        <li><a href="index-jewellery.html">jewellery</a></li>#}
+                {#                                        <li><a href="index-food-drink.html">food & drink</a></li>#}
+                {#                                        <li><a href="index-toys.html">Toys & Games</a></li>#}
+                {#                                    </ul>#}
+                {#                                </li>#}
+                {#                                <li><a href="#">pages</a>#}
+                {#                                    <ul>#}
+                {#                                        <li><a href="about-us.html">about us</a></li>#}
+                {#                                        <li><a href="cart.html">cart</a></li>#}
+                {#                                        <li><a href="checkout.html">checkout</a></li>#}
+                {#                                        <li><a href="wishlist.html">wishlist</a></li>#}
+                {#                                        <li><a href="contact.html">contact</a></li>#}
+                {#                                        <li><a href="login.html">login</a></li>#}
+                {#                                        <li><a href="register.html">register</a></li>#}
+                {#                                    </ul>#}
+                {#                                </li>#}
+                {#                                <li><a href="#">shop</a>#}
+                {#                                    <ul>#}
+                {#                                        <li><a href="shop-grid-view-3-col.html">grid 3 column</a></li>#}
+                {#                                        <li><a href="shop-grid-view-5-col.html">grid 5 column</a></li>#}
+                {#                                        <li><a href="shop-grid-view-sidebar.html">grid with sidebar</a></li>#}
+                {#                                        <li><a href="shop-list-view-1-col.html">list 1 column</a></li>#}
+                {#                                        <li><a href="shop-list-view-2-col.html">list 2 column</a></li>#}
+                {#                                        <li><a href="shop-list-view-sidebar.html">list with sidebar</a></li>#}
+                {#                                        <li><a href="shop-list-view-1-col-container.html">list 1 column box</a></li>#}
+                {#                                        <li><a href="product-details.html">tab style 1</a></li>#}
+                {#                                        <li><a href="product-details-2.html">tab style 2</a></li>#}
+                {#                                        <li><a href="product-details-3.html">tab style 3</a></li>#}
+                {#                                        <li><a href="product-details-6.html">sticky style</a></li>#}
+                {#                                        <li><a href="product-details-7.html">sticky style 2</a></li>#}
+                {#                                        <li><a href="product-details-8.html">gallery style</a></li>#}
+                {#                                        <li><a href="product-details-9.html">gallery style 2</a></li>#}
+                {#                                        <li><a href="product-details-4.html">fixed image style</a></li>#}
+                {#                                        <li><a href="product-details-5.html">fixed image style 2</a></li>#}
+                {#                                    </ul>#}
+                {#                                </li>#}
+                {#                                <li><a href="#">BLOG</a>#}
+                {#                                    <ul>#}
+                {#                                        <li><a href="blog.html">blog </a></li>#}
+                {#                                        <li><a href="blog-2-col.html">blog 2 column</a></li>#}
+                {#                                        <li><a href="blog-left-sidebar.html">blog left sidebar</a></li>#}
+                {#                                        <li><a href="blog-details.html">blog details</a></li>#}
+                {#                                    </ul>#}
+                {#                                </li>#}
+                {#                                <li><a href="contact.html"> Contact </a></li>#}
+                {#                            </ul>#}
+                {#                        </nav>#}
+                {#                    </div>#}
+                {#                </div>#}
             </div>
         </div>
     </div>
@@ -186,22 +178,21 @@
                 </div>
             </div>
             <div class="single-currency-language-account">
-                <div class="cur-lang-acc-title">
-                    <h4>My Account:</h4>
-                </div>
+{#                <div class="cur-lang-acc-title">#}
+{#                    <h4>My Account:</h4>#}
+{#                </div>#}
                 <div class="cur-lang-acc-dropdown">
                     <ul>
-                        <li><a href="#">Compare Products </a></li>
-                        <li><a href="#">Default welcome msg!</a></li>
                         {% if request.user.is_authenticated %}
+                            <li><a href="#">Compare Products </a></li>
+                            <li><a href="#">Default welcome msg!</a></li>
+                            <li><a href="#">My Wish List</a></li>
+                            <li><a href="my-info/{{ request.user.id }}">my info</a></li>
                             <li><a href="/logout">logout</a></li>
                         {% else %}
                             <li><a href="/register">register</a></li>
                             <li><a href="/login">Sign In </a></li>
                         {% endif %}
-
-                        <li><a href="#">My Wish List</a></li>
-
                     </ul>
                 </div>
             </div>

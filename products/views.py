@@ -1,15 +1,16 @@
 from django.contrib import messages
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, render_to_response
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from django.views.generic import ListView
-from .models import Product, Cart, Order, Categories
+from .models import Product, Cart, Order, Categories, OrderItem
 from django.contrib.auth import authenticate, login, logout
-from django import forms
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django import template
+from .models import RegisterForm, UserAddress, UserProfile, UserAddressForm, UserProfileForm, UserAccount
 
 
 class Home(ListView):
@@ -32,32 +33,15 @@ def home(request):
     return render(request, 'home.html', {'product': product, 'catalog': catalog, 'cart': cart})
 
 
-class RegisterForm(UserCreationForm):
-    username = forms.CharField(label='Username')
-    password1 = forms.PasswordInput()
-    password2 = forms.PasswordInput()
-    email = forms.EmailField(label='Email address')
-    first_name = forms.CharField(label='First name')
-    last_name = forms.CharField(label='Last name')
-    phone = forms.CharField(label='Phone number')
-
-    class Meta(UserCreationForm.Meta):
-        fields = ('first_name', 'last_name', 'username', 'email', 'password1', 'password2')
-
-    def saveData(self, commit=True):
-        customer = super().save(commit=False)
-        customer.set_password(self.cleaned_data["password1"])
-        if commit:
-            customer.save()
-        return customer
-
-
 def register(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
             form.saveData()
             username = form.cleaned_data.get('username')
+            user = User.objects.get(username=username)
+            UserAddress.objects.create(user=user)
+            UserProfile.objects.create(user=user)
             raw_password = form.cleaned_data.get('password')
             user = authenticate(username=username, password=raw_password)
             print('register success')
@@ -80,12 +64,7 @@ def sigin(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
-                messages.info(request, f"You are now logged in as {username}")
                 return redirect('/')
-            else:
-                messages.info(request, "Invalid username or password.")
-        else:
-            messages.error(request, "Invalid username or password.")
     form = AuthenticationForm()
     return render(request=request,
                   template_name="login.html",
@@ -95,6 +74,30 @@ def sigin(request):
 def sigout(request):
     logout(request)
     return redirect('/')
+
+
+@login_required
+def my_info(request, id):
+    user = request.user
+    profile = UserProfile.objects.get(user_id=id)
+    address = UserAddress.objects.filter(user_id=id)
+    address_form = UserAddressForm()
+
+    profile_form = UserProfileForm()
+    profile_form['phone'].initial = profile.phone
+    profile_form['gender'].initial = profile.gender
+
+    account = UserAccount()
+    account['first_name'].initial = user.first_name
+    account['last_name'].initial = user.last_name
+    account['email'].initial = user.email
+
+    order = Order.objects.filter(user=request.user, ordered=True)
+    return render(request, 'my_info.html', {'profile': profile_form,
+                                            'address': address_form,
+                                            'account': account,
+                                            'my_address': address,
+                                            'order': order})
 
 
 def ShoppingCart(request):
@@ -108,29 +111,38 @@ def ShoppingCart(request):
 @login_required
 def add_to_cart(request, id):
     item = get_object_or_404(Product, id=id)
-    quantity = int(request.POST['qtybutton'])
-    order_item = Cart.objects.get_or_create(
-        item=item,
-        user=request.user,
-    )
-    order_qs = Order.objects.filter(user=request.user, ordered=False)
-    if order_qs.exists():
-        order = order_qs[0]
-        # check if the order item is in the order
-        if order.orderItems.filter(item_id=item.id).exists():
-            order_item[0].quantity += quantity
-            order_item[0].save()
-            return redirect("/product/" + item.name)
-        else:
-            order_item[0].quantity = quantity
-            order_item[0].save()
-            order.orderItems.add(order_item[0])
-            return redirect("/product/" + item.name)
+    quantity_product = int(request.POST['qtybutton'])
+    cart = Cart.objects.filter(user=request.user, item=item)
+    if cart.exists():
+        cart.update(user=request.user, item=item, quantity=cart[0].quantity + quantity_product)
+        return redirect("/product/" + item.name)
     else:
-        order = Order.objects.create(
-            user=request.user)
-        order.orderItems.add(order_item)
-        return redirect("/")
+        cart.create(user=request.user, item=item, quantity=quantity_product)
+        return redirect("/product/" + item.name)
+
+    # order_item = Cart.objects.get_or_create(
+    #     item=item,
+    #     user=request.user,
+    #     quantity=quantity
+    # )
+    # order_qs = Order.objects.filter(user=request.user, ordered=False)
+    # if order_qs.exists():
+    #     order = order_qs[0]
+    #     # check if the order item is in the order
+    #     if order.orderItems.filter(item_id=item.id).exists():
+    #         order_item[0].quantity += quantity
+    #         order_item[0].save()
+    #         return redirect("/product/" + item.name)
+    #     else:
+    #         order_item[0].quantity = quantity
+    #         order_item[0].save()
+    #         order.orderItems.add(order_item[0])
+    #         return redirect("/product/" + item.name)
+    # else:
+    #     order = Order.objects.create(
+    #         user=request.user)
+    #     order.orderItems.add(order_item)
+    #     return redirect("/")
 
 
 @login_required
@@ -139,37 +151,15 @@ def remove_from_cart(request, id):
     cart_qs = Cart.objects.filter(user_id=request.user, item_id=id)
     if cart_qs.exists():
         cart = cart_qs[0]
-        # Checking the cart quantity
         cart.delete()
-    order_qs = Order.objects.filter(
-        user=request.user,
-        ordered=False
-    )
-    if order_qs.exists():
-        order = order_qs[0]
-        # check if the order item is in the order
-        if order.orderItems.filter(item_id=id).exists():
-            order.delete()
-            # order_item = Cart.objects.filter(
-            #     item=item,
-            #     user=request.user,
-            # )
-            # order.orderItems.remove(order_item)
-            # messages.info(request, "This item was removed from your cart.")
-            return redirect("/cart")
-        else:
-            messages.info(request, "This item was not in your cart")
-            return redirect("/cart")
-    else:
-        messages.info(request, "You do not have an active order")
         return redirect("/cart")
+    return redirect("/cart")
 
 
 def catalog(request, id):
     item = Product.objects.filter(categories=id)
     catagory = Categories.objects.all()
     return render(request, 'home.html', {'product': item, 'catalog': catagory})
-
 
 
 def product_modal(request, id):
@@ -184,15 +174,77 @@ def product_detail(request, name):
     return render(request, 'product_detail.html', {'product': item})
 
 
-def confirm_order(request):
-    order_item = Order.objects.filter(user=request.user, ordered=False)
-    cart_item = Cart.objects.all()
+def confirm_order(request, id_address):
+    order = Order.objects.get_or_create(user=request.user, ordered=False, address_id=id_address)
+
+    cart = Cart.objects.all()
     total = 0
-    for i in cart_item:
-        total += i.get_total()
-    if order_item.exists():
-        order_item[0].ordered = True
-        order_item[0].save()
-        return render(request, 'order.html', {'order_item': cart_item, 'total': total})
-    else:
-        return redirect('/cart')
+    for item in cart:
+        total += item.get_total()
+        OrderItem.objects.get_or_create(user=request.user, order_id=order[0].id, item=item.item, quantity=item.quantity)
+    order_item = OrderItem.objects.filter(user=request.user, order_id=order[0].id).all()
+    order[0].total = total
+    order[0].save()
+    Cart.objects.all().delete()
+    return render(request, 'order.html', {'order_item': order_item, 'total': total, 'order_id': order[0].id})
+
+
+def order_detail(request, id):
+    item = OrderItem.objects.filter(order_id=id)
+    return render(request, 'order_detail.html', {'order_item': item})
+
+def select_address(request):
+    address = UserAddress.objects.filter(user=request.user)
+    return render(request, 'address.html', {'address': address})
+
+
+@login_required
+def check_out(request, id):
+    order = Order.objects.get(id=id)
+    order.ordered = True
+    order.save()
+    return render(request, 'checkout.html', {'order': order})
+
+
+@login_required
+def update_info(request):
+    page = '/my-info/' + str(request.user.id)
+    profile = UserProfile.objects.get(user_id=request.user.id)
+    account = User.objects.get(username=request.user.username)
+    if request.method == 'POST':
+        form_1 = UserProfileForm(request.POST)
+        form_2 = UserAccount(request.POST)
+        if form_1.is_valid() and form_2.is_valid():
+            account.first_name = form_2['first_name'].value()
+            account.last_name = form_2['last_name'].value()
+            account.email = form_2['email'].value()
+            profile.gender = form_1['gender'].value()
+            profile.phone = form_1['phone'].value()
+            account.save()
+            profile.save()
+            return redirect(page)
+    return redirect(page)
+
+
+@login_required
+def update_address(request):
+    page = '/my-info/' + str(request.user.id)
+    if request.method == 'POST':
+        form = UserAddressForm(request.POST)
+        if form.is_valid():
+            UserAddress.objects.update_or_create(user=request.user,
+                                                 provice=form['provice'].value(),
+                                                 district=form['district'].value(),
+                                                 ward=form['ward'].value(),
+                                                 street=form['street'].value(),
+                                                 number_address=form['number_address'].value())
+            return redirect(page)
+    return redirect(page)
+
+
+@login_required
+def delete_address(request, id):
+    page = '/my-info/' + str(request.user.id)
+    address = UserAddress.objects.get(id=id)
+    address.delete()
+    return redirect(page)

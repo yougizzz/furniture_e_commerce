@@ -4,7 +4,7 @@
 
 <div class="container">
 
-    <div class="your-order">
+    <div class="your-order" style="background-color: white">
         <h3 style="margin-top: 150px" class="text-center">Your order</h3>
         <div class="your-order-table table-responsive">
             <table>
@@ -32,7 +32,7 @@
                             <span class="amount">$ {{ i.get_total }}</span>
                         </td>
                     </tr>
-                {% endfor %}}
+                {% endfor %}
                 </tbody>
                 <tfoot>
                 <tr class="order-total">
@@ -47,66 +47,15 @@
         </div>
         <div class="payment-method">
             <div class="payment-accordion">
-                <div class="panel-group" id="faq">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h5 class="panel-title"><a data-toggle="collapse" aria-expanded="true"
-                                                       data-parent="#faq" href="#payment-1">Direct Bank
-                                Transfer.</a></h5>
-                        </div>
-                        <div id="payment-1" class="panel-collapse collapse show">
-                            <div class="panel-body">
-                                <p>Make your payment directly into our bank account. Please use your Order ID as
-                                    the
-                                    payment reference. Your order won’t be shipped until the funds have cleared
-                                    in
-                                    our account.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h5 class="panel-title"><a class="collapsed" data-toggle="collapse"
-                                                       aria-expanded="false" data-parent="#faq"
-                                                       href="#payment-2">Cheque
-                                Payment</a></h5>
-                        </div>
-                        <div id="payment-2" class="panel-collapse collapse">
-                            <div class="panel-body">
-                                <p>Make your payment directly into our bank account. Please use your Order ID as
-                                    the
-                                    payment reference. Your order won’t be shipped until the funds have cleared
-                                    in
-                                    our account.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h5 class="panel-title"><a class="collapsed" data-toggle="collapse"
-                                                       aria-expanded="false" data-parent="#faq"
-                                                       href="#payment-3">PayPal</a>
-                            </h5>
-                        </div>
-                        <div id="payment-3" class="panel-collapse collapse">
-                            <div class="panel-body">
-                                <p>Make your payment directly into our bank account. Please use your Order ID as
-                                    the
-                                    payment reference. Your order won’t be shipped until the funds have cleared
-                                    in
-                                    our account.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="order-button-payment">
-                    <input type="submit" value="Place order"/>
+                <div class="text-center">
+                    <a style="background-color: black; color: #dddddd" class="cart-btn-style btn-hover"
+                       href="/check-out/{{ order_id }}">
+                        CHECKOUT
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 </div>
-</div>
-
 
 {% include 'footer.html' %}

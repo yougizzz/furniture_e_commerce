@@ -1,6 +1,7 @@
 {% include 'header.html' %}
 {% load staticfiles %}
 {% load static %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <div class="cart-main-area pt-95 pb-100">
     <div class="container">
         <div class="row">
@@ -24,18 +25,21 @@
                                 <tr>
                                     {#                                    <td class="product-remove"><a href="/remove_cart/{{ product.item.id }}"><i class="ion-android-close"></i></a></td>#}
                                     <td class="product-remove">
-                                        <a href="#" data-toggle="modal" data-target="#cartConfirm">
+                                        <a href="#" data-toggle="modal" data-target="#cartConfirm"  onclick="confirm_remove({{ product.item.id}})">
                                             <i class="ion-android-close"></i>
                                         </a>
                                     </td>
                                     <td class="product-thumbnail">
-                                        <a href="#"><img src={{ product.item.mainImage.url }} alt="" height="100"
-                                                         width="100"></a>
+                                        <a href="#">
+                                            <img src={{ product.item.mainImage.url }} alt="" height="100" width="100">
+                                        </a>
                                     </td>
-                                    <td class="product-name"><a href="#">{{ product.item.name }}</a></td>
+                                    <td class="product-name">
+                                        <a href="/product/{{ product.item.name }}">{{ product.item.name }}</a>
+                                    </td>
                                     <td class="product-price"><span class="amount">${{ product.item.price }}</span></td>
-                                    <td class="product-quantity">
-                                        <input value={{ product.quantity }} type="number">
+                                    <td class="product-price">
+                                        <span class="amount">{{ product.quantity }}</span>
                                     </td>
                                     <td class="product-subtotal">${{ product.get_total }}</td>
 
@@ -64,10 +68,9 @@
                                 {% block content %}
                                     <h2>Cart totals</h2>
                                     <ul>
-                                        {#                                    <li>Subtotal<span>100.00</span></li>#}
                                         <li>Total<span>$ {{ total }}</span></li>
                                     </ul>
-                                    <a href="/order">Proceed to checkout</a>
+                                    <a href="/select-address">Proceed to checkout</a>
                                 {% endblock %}
                             </div>
                         </div>
@@ -77,6 +80,16 @@
         </div>
     </div>
 </div>
+<script>
+
+  function confirm_remove(id){
+    let remove_href = "/remove_cart/" + id
+    $("#yes_btn").attr("href", remove_href)
+  }
+
+</script>
 {% include 'cart_modal_confirm.html' %}
+
+
 
 {% include 'footer.html' %}

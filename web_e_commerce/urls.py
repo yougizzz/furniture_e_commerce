@@ -16,7 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from products.views import home, register, sigin, sigout, add_to_cart, remove_from_cart, \
-    ShoppingCart, catalog, product_modal, product_detail, confirm_order
+    ShoppingCart, catalog, product_modal, product_detail, confirm_order, my_info, update_info, \
+    update_address, delete_address, check_out, select_address, order_detail
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -31,7 +32,14 @@ urlpatterns = [
                   path('product/catalog/<id>', catalog, name='catalog'),
                   path('product_modal/<id>', product_modal, name='product_modal'),
                   path('product/<name>', product_detail, name='product_detail'),
-                  path('order/', confirm_order, name='order'),
+                  path('order/<id_address>', confirm_order, name='order'),
+                  path('my-info/<id>', my_info, name='my-info'),
+                  path('update-info/', update_info, name='update-info'),
+                  path('update-address/', update_address, name='update-address'),
+                  path('delete-address/<id>', delete_address, name='delete-address'),
+                  path('check-out/<id>', check_out, name='checkout'),
+                  path('select-address', select_address, name='select-address'),
+                  path('order-detail/<id>', order_detail, name='order-detail'),
                   path('admin/', admin.site.urls),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

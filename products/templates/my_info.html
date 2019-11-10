@@ -1,0 +1,143 @@
+{% include 'header.html' %}
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+<div class="cart-main-area pt-95 pb-100">
+    <div class="container" style="margin-top: 100px">
+        <div class="text-center">
+            <h1 style="font-size: 80px" class="ion ion-android-person"></h1>
+        </div>
+
+        <div class="panel-group" id="userProfile">
+            <div class="panel panel-default">
+                <div class="panel-heading" data-toggle="collapse" data-target="#profile">
+                    <h4 class="panel-title">
+                        MY PROFILE
+                    </h4>
+                </div>
+                <div id="profile" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <div class="container" style="width: 650px">
+                            <form method="post" action="{% url 'update-info' %}">
+                                {% csrf_token %}
+                                {{ account.as_p }}
+                                {{ profile.as_p }}
+                                <div class="button-box text-center">
+                                    <button type="reset" class="default-btn" data-toggle="collapse"
+                                            data-target="#profile">
+                                        CANCEL
+                                    </button>
+                                    <button type="submit" class="default-btn">
+                                        SAVE
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading" data-toggle="collapse" data-target="#address">
+                    <h4 class="panel-title ">
+                        MY ADDRESS
+                    </h4>
+                </div>
+                <div id="address" class="panel-collapse collapse">
+                    <div class="container" style="width: 650px">
+                        <div class="panel panel-default" style="margin-top: 20px; margin-bottom: 20px">
+                            <div class="panel-heading" data-toggle="collapse" data-target="#create_address">
+                                <h5 class="panel-title text-center">
+                                    Create New Address
+                                </h5>
+                            </div>
+                            <div id="create_address" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <form method="post" action="{% url 'update-address' %}">
+                                        {% csrf_token %}
+                                        {{ address.as_p }}
+                                        <div class="button-box text-center">
+                                            <button type="reset" class="default-btn" data-toggle="collapse"
+                                                    data-target="#create_address">
+                                                CANCEL
+                                            </button>
+                                            <button type="submit" class="default-btn">
+                                                SAVE
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div style="margin: 20px">
+                        {% if my_address.count > 0 %}
+                            {% for item in my_address %}
+                                <div class="panel panel-info">
+                                    <h5 class="text-center" style="margin-top: 15px">
+                                        My address: number {{ item.number_address }}, {{ item.street }} street,
+                                        {{ item.ward }} ward, {{ item.district }} district, {{ item.provice }} provice
+                                        (city)
+                                    </h5>
+                                    <div class="button-box text-center" style="margin-bottom: 15px">
+                                        <button data-toggle="modal" data-target="#addressConfirm" class="default-btn"
+                                                onclick="confirm_remove_address({{ item.id }})">
+                                            REMOVE
+                                        </button>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading" data-toggle="collapse" data-target="#order">
+                    <h4 class="panel-title">
+                        MY ORDER
+                    </h4>
+                </div>
+                <div id="order" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <div class="your-order-table table-responsive">
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th class="product-name">ID</th>
+                                    <th class="product-total">TOTAL</th>
+                                    <th class="product-total">DATE</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for i in order %}
+                                    <tr>
+                                        <td>{{ i.id }}</td>
+                                        <td>{{ i.total }} $</td>
+                                        <td>{{ i.created }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                                <tfoot>
+                                </tfoot>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function confirm_remove_address(id) {
+        let remove_href = "/delete-address/" + id
+        $("#yes_btn").attr("href", remove_href)
+    }
+
+</script>
+
+{% include 'my_info_confirm.html' %}

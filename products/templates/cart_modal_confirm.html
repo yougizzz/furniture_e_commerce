@@ -1,18 +1,15 @@
-<div class="modal fade" id="cartConfirm" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade" id="cartConfirm"  tabindex="1" role="dialog" aria-hidden="true">
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span class="ion-android-close" aria-hidden="true"></span>
     </button>
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog" role="alert">
         <div class="modal-content">
             <div class="modal-body">
                 <h4>Remove this product from cart?</h4>
                 <div class="cart-checkout-btn">
-
-                    <a href="#" class="btn-hover cart-btn-style" button data-dismiss="modal">No</a>
-                    <a href="#" class="btn-hover cart-btn-style">Yes</a>
+                    <a href="#" id="no_btn" class="btn-hover cart-btn-style"  data-dismiss="modal">No</a>
+                    <a href="#" id="yes_btn" class="btn-hover cart-btn-style">Yes</a>
                 </div>
-                {#                <button data-dismiss="modal" >NO</button>#}
-                {#                <button>YES</button>#}
             </div>
         </div>
     </div>

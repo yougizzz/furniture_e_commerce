@@ -1,0 +1,23 @@
+{% include 'header.html' %}
+
+<div class="container">
+    <div class="your-order text-center" style="background-color: white">
+        <div style="margin-top: 150px; margin-bottom: 50px">
+            <h3>YOUR ORDER IS CONFIRMED</h3>
+        </div>
+        <div>
+            <h4>Your order will be sent to this address:
+                number {{ order.address.number_address }}, {{ order.address.street }} street,
+                {{ order.address.ward }} ward, {{ order.address.district }} district,
+                {{ order.address.provice }}
+            </h4>
+
+        </div>
+    </div>
+     <div class="text-center">
+         <h3>THANK YOU</h3>
+     </div>
+</div>
+
+
+{% include 'footer.html' %}

@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="{% static 'assets/css/responsive.css' %}">
 
 <div class="shop-page-wrapper hidden-items padding-filter">
-    <div class="container-fluid">
+    <div class="container-fluid" style="padding-top: 50px">
         <div class="shop-filters-left">
             {% include 'filter.html' %}
         </div>
@@ -25,27 +25,32 @@
                             <div class="custom-col-5 custom-col-style">
                                 <div class="single-product mb-35">
                                     <div class="product-img">
-                                        <a href="#"><img src="{{ item.mainImage.url }}" alt=""></a>
+                                        <a href="#">
+                                            <img src="{{ item.mainImage.url }}" alt="">
+                                        </a>
                                         <div class="product-action">
-                                            <a title="Wishlist" class="animate-left" href="#"><i
-                                                    class="ion-ios-heart-outline"></i></a>
+                                            <a title="Wishlist" class="animate-left" href="#">
+                                                <i class="ion-ios-heart-outline"></i>
+                                            </a>
                                             <a title="Quick View" data-toggle="modal" data-target="#exampleModal"
-                                               class="animate-right" href="/product_modal/{{ item.id }}"><i
-                                                    class="ion-ios-eye-outline"></i></a>
+                                               class="animate-right" href="/product_modal/{{ item.id }}">
+                                                <i class="ion-ios-eye-outline"></i>
+                                            </a>
                                         </div>
                                     </div>
-                                    <div class="product-content">
-                                        <div class="product-title-price">
+                                    <div class="product-content text-center">
+                                        <div class="product-title-price ">
                                             <div class="product-title">
-                                                <h4><a href="/product/{{ item.name }}">{{ item.name }}</a></h4>
-                                            </div>
-                                            <div class="product-price">
-                                                <span>${{ item.price }}</span>
+                                                <h4>
+                                                    <a href="/product/{{ item.name }}">
+                                                        {{ item.name }}
+                                                    </a>
+                                                </h4>
                                             </div>
                                         </div>
                                         <div class="product-cart-categori">
                                             <div class="product-cart">
-                                                <span>Furniter</span>
+                                                <span>${{ item.price }}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -63,22 +68,26 @@
                                         <a href="#"><img src="{{ item.mainImage.url }}" alt=""></a>
                                         <div class="product-action">
                                             <a title="Quick View" data-toggle="modal" data-target="#exampleModal"
-                                               class="animate-right" href="#"><i class="ion-ios-eye-outline"></i></a>
+                                               class="animate-right" href="#">
+                                                <i class="ion-ios-eye-outline"></i>
+                                            </a>
                                         </div>
                                     </div>
                                     <div class="product-content-list">
                                         <div class="product-list-info">
-                                            <h4><a href="/product/{{ item.name }}">{{ item.name }}</a></h4>
+                                            <h4>
+                                                <a href="/product/{{ item.name }}">
+                                                    {{ item.name }}
+                                                </a>
+                                            </h4>
                                             <span>${{ item.price }}</span>
                                             <p>{{ item.description }}</p>
                                         </div>
                                         <div class="product-list-cart-wishlist">
-{#                                            <div class="product-list-cart">#}
-{#                                                <a class="btn-hover list-btn-style" href="#">add to cart</a>#}
-{#                                            </div>#}
                                             <div class="product-list-wishlist">
-                                                <a class="btn-hover list-btn-wishlist" href="#"><i
-                                                        class="ion-ios-heart-outline"></i></a>
+                                                <a class="btn-hover list-btn-wishlist" href="#">
+                                                    <i class="ion-ios-heart-outline"></i>
+                                                </a>
                                             </div>
                                         </div>
                                     </div>
@@ -104,7 +113,6 @@
                         <li class="disabled">
                             <div class="product-list-cart">
                                 <a href="#" class="btn-hover list-btn-style sr-only">&slarr;</a>
-                                {#                            <span>&laquo;</span>#}
                             </div>
                         </li>
                     {% endif %}

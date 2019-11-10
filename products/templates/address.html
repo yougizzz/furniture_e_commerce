@@ -1,0 +1,55 @@
+{% include 'header.html' %}
+
+<div class="your-order">
+    <div class="container" style="padding-top: 100px">
+        <div class="panel text-center">
+            <h2>PLEASE CHOOSE YOUR ADDRESS</h2>
+        </div>
+        <div class="your-order-table table-responsive">
+            <table id="tableAddress">
+                <thead>
+                <tr>
+                    <th class="product-name">Check</th>
+                    <th class="product-name">Address</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in address %}
+                    <tr class="cart_item">
+                        <td class="product-name">
+                            <span disabled>
+                                <i onclick="select_address({{ item.id }})"
+                                   id="{{ item.id }}" class="ion ion-android-checkbox-outline-blank">
+                                </i>
+                            </span>
+                        </td>
+                        <td>
+                            number {{ item.number_address }}, {{ item.street }}
+                            street,
+                            {{ item.ward }} ward, {{ item.district }}
+                            district, {{ item.provice }} provice
+                            (city)
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <div class="text-center" style="margin-top: 40px">
+                <a id="goOrder" href="#" class="cart-btn-style btn-hover">NEXT STEP</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    function select_address(id) {
+        let order_href = "/order/" + id
+        $("#" + id).attr("class", "ion ion-checkmark-circled")
+        $("#goOrder").attr("href", order_href)
+        {#$("#tableAddress tbody").attr('disabled', 'disabled')#}
+    }
+
+
+</script>
+
+{% include 'footer.html' %}

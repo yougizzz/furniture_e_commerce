@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Product, Material, Country, Color, Categories, Brand, ImageProduct, Order, Cart
+from .models import Product, Material, Country, Color, Categories, Brand, \
+    ImageProduct, Order, Cart, UserAddress, UserProfile, OrderItem
 
 
 class ImageAdmin(admin.ModelAdmin):
@@ -41,9 +42,11 @@ class OrderAdmin(admin.ModelAdmin):
     list_filter = ('user', )
     list_per_page = 10
 
+
 class CartAdmin(admin.ModelAdmin):
     list_display = ('user', 'item', 'quantity')
     list_per_page = 10
+
 
 class ProductAdmin(admin.ModelAdmin):
     list_per_page = 10
@@ -51,6 +54,19 @@ class ProductAdmin(admin.ModelAdmin):
     search_fields = ('name',)
 
 
+class UserProfileAdmin(admin.ModelAdmin):
+    list_per_page = 10
+    list_display = ('user', 'phone',)
+
+
+class UserAddressAdmin(admin.ModelAdmin):
+    list_per_page = 10
+    list_display = ('user', )
+
+
+class OrderItemAdmin(admin.ModelAdmin):
+    list_display = ('id',)
+    list_per_page = 20
 
 
 admin.site.register(ImageProduct, ImageAdmin)
@@ -62,3 +78,6 @@ admin.site.register(Color, CountryAdmin)
 admin.site.register(Order, OrderAdmin)
 admin.site.register(Cart, CartAdmin)
 admin.site.register(Product, ProductAdmin)
+admin.site.register(UserProfile, UserProfileAdmin)
+admin.site.register(UserAddress, UserAddressAdmin)
+admin.site.register(OrderItem, OrderItemAdmin)

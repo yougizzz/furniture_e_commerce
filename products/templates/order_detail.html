@@ -1,0 +1,42 @@
+{% include 'header.html' %}
+{% load static %}
+{% load staticfiles %}
+<div class="your-order">
+    <div class="container">
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>NAME</th>
+                <th>QUANTITY</th>
+                <th>PRICE</th>
+                <th>IMAGE</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for item in order_item %}
+                <tr>
+                    <td>
+                        <a href="#">{{ item.item.id }}</a>
+                    </td>
+                    <td>
+                        {{ item.item.name }}
+                    </td>
+                    <td>
+                        {{ item.quantity }}
+                    </td>
+                    <td>
+                        {{ item.item.price }}
+                    </td>
+                    <td>
+                        <img src="{{ item.item.mainImage }}" alt="">
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+{% include 'footer.html' %}
