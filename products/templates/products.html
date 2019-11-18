@@ -67,8 +67,7 @@
                                     <div class="product-img list-img-width">
                                         <a href="#"><img src="{{ item.mainImage.url }}" alt=""></a>
                                         <div class="product-action">
-                                            <a title="Quick View" data-toggle="modal" data-target="#exampleModal"
-                                               class="animate-right" href="#">
+                                            <a title="Quick View" onclick="show_product_detail_modal({{ item.id }})" href="#">
                                                 <i class="ion-ios-eye-outline"></i>
                                             </a>
                                         </div>
@@ -170,6 +169,7 @@
 <script src="{% static 'assets/js/vendor/owl.carousel.min.js' %}"></script>
 <script src="{% static 'assets/js/plugins.js' %}"></script>
 <script src="{% static 'assets/js/main.js' %}"></script>
+<script src="{% static 'assets/js/modal.js' %}"></script>
 <script type="text/javascript">
     // grab an element
     var myElement = document.querySelector(".intelligent-header");

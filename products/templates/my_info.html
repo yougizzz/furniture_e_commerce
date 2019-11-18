@@ -113,7 +113,9 @@
                                 <tbody>
                                 {% for i in order %}
                                     <tr>
-                                        <td>{{ i.id }}</td>
+                                        <td>
+                                            <a href="/order-detail/{{ i.id }}">{{ i.id }}</a>
+                                        </td>
                                         <td>{{ i.total }} $</td>
                                         <td>{{ i.created }}</td>
                                     </tr>

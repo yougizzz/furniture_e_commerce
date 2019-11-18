@@ -23,9 +23,9 @@
                             <tbody>
                             {% for product in cart %}
                                 <tr>
-                                    {#                                    <td class="product-remove"><a href="/remove_cart/{{ product.item.id }}"><i class="ion-android-close"></i></a></td>#}
                                     <td class="product-remove">
-                                        <a href="#" data-toggle="modal" data-target="#cartConfirm"  onclick="confirm_remove({{ product.item.id}})">
+                                        <a href="#" data-toggle="modal" data-target="#cartConfirm"
+                                           onclick="confirm_remove({{ product.item.id }})">
                                             <i class="ion-android-close"></i>
                                         </a>
                                     </td>
@@ -56,9 +56,11 @@
                                            placeholder="Coupon code" type="text">
                                     <input class="button" name="apply_coupon" value="Apply coupon" type="submit">
                                 </div>
-                                <div class="coupon2">
-                                    <input class="button" name="update_cart" value="Update cart" type="submit">
-                                </div>
+                                {% if cart %}
+                                    <div class="coupon2">
+                                        <input class="button" name="update_cart" value="Update cart" type="submit">
+                                    </div>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
@@ -70,7 +72,9 @@
                                     <ul>
                                         <li>Total<span>$ {{ total }}</span></li>
                                     </ul>
-                                    <a href="/select-address">Proceed to checkout</a>
+                                    {% if cart %}
+                                        <a href="/select-address">Proceed to checkout</a>
+                                    {% endif %}
                                 {% endblock %}
                             </div>
                         </div>
@@ -82,14 +86,13 @@
 </div>
 <script>
 
-  function confirm_remove(id){
-    let remove_href = "/remove_cart/" + id
-    $("#yes_btn").attr("href", remove_href)
-  }
+    function confirm_remove(id) {
+        let remove_href = "/remove_cart/" + id
+        $("#yes_btn").attr("href", remove_href)
+    }
 
 </script>
 {% include 'cart_modal_confirm.html' %}
-
 
 
 {% include 'footer.html' %}

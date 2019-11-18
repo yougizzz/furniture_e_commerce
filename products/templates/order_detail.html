@@ -1,42 +1,42 @@
 {% include 'header.html' %}
-{% load static %}
-{% load staticfiles %}
-<div class="your-order">
+
+<div class="your-order" style="padding-top: 150px; margin-bottom: 40px; background-color: white">
     <div class="container">
-        <table>
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>NAME</th>
-                <th>QUANTITY</th>
-                <th>PRICE</th>
-                <th>IMAGE</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for item in order_item %}
+        <div class="your-order-table table-responsive">
+            <table>
+                <thead>
                 <tr>
-                    <td>
-                        <a href="#">{{ item.item.id }}</a>
-                    </td>
-                    <td>
-                        {{ item.item.name }}
-                    </td>
-                    <td>
-                        {{ item.quantity }}
-                    </td>
-                    <td>
-                        {{ item.item.price }}
-                    </td>
-                    <td>
-                        <img src="{{ item.item.mainImage }}" alt="">
-                    </td>
+                    <th>ID</th>
+                    <th>NAME</th>
+                    <th>QUANTITY</th>
+                    <th>PRICE</th>
+                    <th>IMAGE</th>
                 </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                {% for item in order_item %}
+                    <tr>
+                        <td>
+                            <a href="/product/{{ item.item.name }}">{{ item.item.id }}</a>
+                        </td>
+                        <td>
+                            <a href="/product/{{ item.item.name }}">{{ item.item.name }}</a>
+                        </td>
+                        <td>
+                            {{ item.quantity }}
+                        </td>
+                        <td>
+                            {{ item.item.price }} $
+                        </td>
+                        <td>
+                            <img height="100" width="100" src="{{ item.item.mainImage.url }}" alt="">
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
-
 
 {% include 'footer.html' %}

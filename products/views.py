@@ -1,16 +1,18 @@
-from django.contrib import messages
+from django import template
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
-from django.http import HttpResponse
-from django.shortcuts import render, redirect, render_to_response
+from django.http import JsonResponse
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from django.views.generic import ListView
-from .models import Product, Cart, Order, Categories, OrderItem
 from django.contrib.auth import authenticate, login, logout
-
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from .models import RegisterForm, UserAddress, UserProfile, UserAddressForm, UserProfileForm, UserAccount
+from .models import RegisterForm, UserAddress, UserProfile, UserAddressForm, UserProfileForm, UserAccount, \
+    Product, Categories, Brand
+from order.models import Order, OrderItem, Cart
+
+register = template.Library()
 
 
 class Home(ListView):
@@ -23,6 +25,7 @@ def home(request):
     page = request.GET.get('page', 1)
     paging = Paginator(list_product, 8)
     catalog = Categories.objects.all()
+    brand = Brand.objects.all()
     cart = Cart.objects.all()
     try:
         product = paging.page(page)
@@ -30,7 +33,7 @@ def home(request):
         product = paging.page(1)
     except EmptyPage:
         product = paging.page(paging.num_pages)
-    return render(request, 'home.html', {'product': product, 'catalog': catalog, 'cart': cart})
+    return render(request, 'home.html', {'product': product, 'catalog': catalog, 'cart': cart, 'brand': brand})
 
 
 def register(request):
@@ -44,11 +47,7 @@ def register(request):
             UserProfile.objects.create(user=user)
             raw_password = form.cleaned_data.get('password')
             user = authenticate(username=username, password=raw_password)
-            print('register success')
-            # login(request, user)
-            # return redirect('/register')
-        else:
-            print('register fail')
+            redirect('/login')
     else:
         # fields = UserCreationForm.Meta.fields + ('first_name', 'last_name', 'email',)
         form = RegisterForm()
@@ -92,7 +91,7 @@ def my_info(request, id):
     account['last_name'].initial = user.last_name
     account['email'].initial = user.email
 
-    order = Order.objects.filter(user=request.user, ordered=True)
+    order = Order.objects.filter(user=request.user, ordered=True).order_by('-created')
     return render(request, 'my_info.html', {'profile': profile_form,
                                             'address': address_form,
                                             'account': account,
@@ -120,30 +119,6 @@ def add_to_cart(request, id):
         cart.create(user=request.user, item=item, quantity=quantity_product)
         return redirect("/product/" + item.name)
 
-    # order_item = Cart.objects.get_or_create(
-    #     item=item,
-    #     user=request.user,
-    #     quantity=quantity
-    # )
-    # order_qs = Order.objects.filter(user=request.user, ordered=False)
-    # if order_qs.exists():
-    #     order = order_qs[0]
-    #     # check if the order item is in the order
-    #     if order.orderItems.filter(item_id=item.id).exists():
-    #         order_item[0].quantity += quantity
-    #         order_item[0].save()
-    #         return redirect("/product/" + item.name)
-    #     else:
-    #         order_item[0].quantity = quantity
-    #         order_item[0].save()
-    #         order.orderItems.add(order_item[0])
-    #         return redirect("/product/" + item.name)
-    # else:
-    #     order = Order.objects.create(
-    #         user=request.user)
-    #     order.orderItems.add(order_item)
-    #     return redirect("/")
-
 
 @login_required
 def remove_from_cart(request, id):
@@ -158,15 +133,14 @@ def remove_from_cart(request, id):
 
 def catalog(request, id):
     item = Product.objects.filter(categories=id)
-    catagory = Categories.objects.all()
-    return render(request, 'home.html', {'product': item, 'catalog': catagory})
+    category = Categories.objects.all()
+    brand = Brand.objects.all()
+    return render(request, 'home.html', {'product': item, 'catalog': category, 'brand': brand})
 
 
 def product_modal(request, id):
-    item = Product.objects.filter(id=id).first()
-    print(item)
-    # return render(request, 'product_modal.html', {'product_detail': item})
-    return HttpResponse(product_modals=item)
+    item = Product.objects.get(id=id)
+    return JsonResponse(data=item)
 
 
 def product_detail(request, name):
@@ -176,7 +150,6 @@ def product_detail(request, name):
 
 def confirm_order(request, id_address):
     order = Order.objects.get_or_create(user=request.user, ordered=False, address_id=id_address)
-
     cart = Cart.objects.all()
     total = 0
     for item in cart:
@@ -192,6 +165,7 @@ def confirm_order(request, id_address):
 def order_detail(request, id):
     item = OrderItem.objects.filter(order_id=id)
     return render(request, 'order_detail.html', {'order_item': item})
+
 
 def select_address(request):
     address = UserAddress.objects.filter(user=request.user)
