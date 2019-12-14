@@ -21,7 +21,9 @@ class Home(ListView):
 
 
 def home(request):
+    # return render(request, 'manager/manage_order.html')
     list_product = Product.objects.all()
+    list_product = get_catalog(None)
     page = request.GET.get('page', 1)
     paging = Paginator(list_product, 8)
     catalog = Categories.objects.all()
@@ -61,9 +63,12 @@ def sigin(request):
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
             user = authenticate(username=username, password=password)
-            if user is not None:
+            if user is not None and user.is_staff is False:
                 login(request, user)
                 return redirect('/')
+            elif user and user.is_staff and user.is_superuser is False:
+                login(request, user)
+                return redirect(request, manager_page)
     form = AuthenticationForm()
     return render(request=request,
                   template_name="login.html",
@@ -91,12 +96,32 @@ def my_info(request, id):
     account['last_name'].initial = user.last_name
     account['email'].initial = user.email
 
+    list_waiting_order_item = []
+    waiting_order = Order.objects.filter(status="waiting", user_id=id)
+    for i in waiting_order:
+        waiting_order_detail = OrderItem.objects.filter(order_id=i.id)
+        for j in waiting_order_detail:
+            product = Product.objects.get(id=j.item_id)
+            myDict = {
+                "id": j.id,
+                "quantity": j.quantity,
+                "created": j.created,
+                "item_name": product.name,
+                "item_price": product.price,
+                "item_image": product.mainImage.url,
+                "order_id": j.order_id
+            }
+            list_waiting_order_item.append(myDict)
+
     order = Order.objects.filter(user=request.user, ordered=True).order_by('-created')
     return render(request, 'my_info.html', {'profile': profile_form,
                                             'address': address_form,
                                             'account': account,
                                             'my_address': address,
-                                            'order': order})
+                                            'order': order,
+                                            'waiting_order': waiting_order,
+                                            'waiting_order_item': list_waiting_order_item
+                                            })
 
 
 def ShoppingCart(request):
@@ -131,11 +156,58 @@ def remove_from_cart(request, id):
     return redirect("/cart")
 
 
-def catalog(request, id):
-    item = Product.objects.filter(categories=id)
-    category = Categories.objects.all()
+def get_catalog(id):
+    if id:
+        item = Product.objects.filter(categories=id)
+        # category = Categories.objects.all()
+        # brand = Brand.objects.all()
+        return item
+    else:
+        products = Product.objects.all()
+        return products
+
+
+def get_brand(id):
+    if id:
+        item = Product.objects.filter(brand=id)
+        # category = Categories.objects.all()
+        # brand = Brand.objects.all()
+        return item
+    else:
+        products = Product.objects.all()
+        return products
+
+
+def filter_catalog(request, id):
+    list_product = get_catalog(id)
+    page = request.GET.get('page', 1)
+    paging = Paginator(list_product, 8)
+    catalog = Categories.objects.all()
     brand = Brand.objects.all()
-    return render(request, 'home.html', {'product': item, 'catalog': category, 'brand': brand})
+    cart = Cart.objects.all()
+    try:
+        product = paging.page(page)
+    except PageNotAnInteger:
+        product = paging.page(1)
+    except EmptyPage:
+        product = paging.page(paging.num_pages)
+    return render(request, 'home.html', {'product': product, 'catalog': catalog, 'cart': cart, 'brand': brand})
+
+
+def filter_brand(request, id_brand):
+    list_product = get_brand(id_brand)
+    page = request.GET.get('page', 1)
+    paging = Paginator(list_product, 8)
+    catalog = Categories.objects.all()
+    brand = Brand.objects.all()
+    cart = Cart.objects.all()
+    try:
+        product = paging.page(page)
+    except PageNotAnInteger:
+        product = paging.page(1)
+    except EmptyPage:
+        product = paging.page(paging.num_pages)
+    return render(request, 'home.html', {'product': product, 'catalog': catalog, 'cart': cart, 'brand': brand})
 
 
 def product_modal(request, id):
@@ -145,7 +217,8 @@ def product_modal(request, id):
 
 def product_detail(request, name):
     item = Product.objects.filter(name=name).first()
-    return render(request, 'product_detail.html', {'product': item})
+    related_product = Product.objects.filter(categories_id=item.categories_id)[:4]
+    return render(request, 'product_detail.html', {'product': item, 'product_related': related_product})
 
 
 def confirm_order(request, id_address):
@@ -222,3 +295,34 @@ def delete_address(request, id):
     address = UserAddress.objects.get(id=id)
     address.delete()
     return redirect(page)
+
+
+def search_product(request):
+    if request.method == 'GET':
+        name = request.GET
+        tmp = name.get('search_name')
+    list_product = Product.objects.filter(name__icontains=tmp)
+    page = request.GET.get('page', 1)
+    paging = Paginator(list_product, 8)
+    catalog = Categories.objects.all()
+    brand = Brand.objects.all()
+    cart = Cart.objects.all()
+    try:
+        product = paging.page(page)
+    except PageNotAnInteger:
+        product = paging.page(1)
+    except EmptyPage:
+        product = paging.page(paging.num_pages)
+    return render(request, 'home.html', {'product': product, 'catalog': catalog, 'cart': cart, 'brand': brand})
+
+
+def cancel_order(request, id):
+    page = '/my-info/' + str(request.user.id)
+    order = Order.objects.get(id=id)
+    order.status = "cancel"
+    order.save()
+    return redirect(page)
+
+@login_required
+def manager_page(request):
+    return render(request, 'manager/manage_order.html')

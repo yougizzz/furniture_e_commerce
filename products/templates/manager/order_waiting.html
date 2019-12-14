@@ -1,0 +1,100 @@
+<div style="margin-top: 15px">
+    <div class="pull-right" style="width: 250px; margin-bottom: 15px">
+        <input class="form-control" id="myInput" type="text" placeholder="Search..">
+    </div>
+    <table class="table table-hover text-center">
+        <thead>
+        <tr class="active">
+            <th class="text-center">ID</th>
+            <th class="text-center">DATE</th>
+            <th class="text-center">DETAIL</th>
+            <th class="text-center">TOTAL</th>
+            <th class="text-center">ADDRESS</th>
+            <th class="text-center">ACTION</th>
+        </tr>
+        </thead>
+        <tbody id="myTable">
+        <tr>
+            <td>asd</td>
+            <td>asd@example.com</td>
+            <td>
+                <a data-toggle="modal" data-target="#order_popup" onclick="view_order_detail('ok')">
+                    <i class="glyphicon glyphicon-list"></i> detail
+                </a>
+            </td>
+            <td>200$</td>
+            <td style="max-width: 250px">
+                <address>
+                    1355 Market Street, Suite 900
+                    San Francisco, CA 94103
+                </address>
+            </td>
+            <td style="width: 400px">
+                <form action="" class="form-inline">
+                    <select class="form-control" name="" id="">
+                        <option value="" disabled selected>Waiting</option>
+                        <option value="Shipping">Shipping</option>
+                        <option value="Complete">Complete</option>
+                        <option value="Cancel">Cancel</option>
+                    </select>
+                    <button class="btn btn-dark" type="reset">Cancel</button>
+                    <button class="btn btn-dark">Confirm</button>
+                </form>
+            </td>
+        </tr>
+        <tr>
+            <td>asd</td>
+            <td>asd@example.com</td>
+            <td>
+                <a data-toggle="modal" data-target="#order_popup">
+                    <i class="glyphicon glyphicon-list"></i> detail
+                </a>
+            </td>
+            <td>150$</td>
+            <td style="max-width: 250px">
+                <address>
+                    1355 Market Street, Suite 900
+                    San Francisco, CA 94103
+                </address>
+            </td>
+            <td style="width: 400px">
+                <form action="" class="form-inline">
+                    <select class="form-control" name="" id="">
+                        <option value="" disabled selected>Waiting</option>
+                        <option value="Shipping">Shipping</option>
+                        <option value="Complete">Complete</option>
+                        <option value="Cancel">Cancel</option>
+                    </select>
+                    <button class="btn btn-dark" type="reset">Cancel</button>
+                    <button class="btn btn-dark">Confirm</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="pull-right">
+        <ul class="pagination">
+            <li class="active"><a href="#">1</a></li>
+            <li><a href="#">2</a></li>
+            <li><a href="#">3</a></li>
+            <li><a href="#">4</a></li>
+            <li><a href="#">5</a></li>
+        </ul>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#myInput").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#myTable tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+</script>
+<script>
+    function view_order_detail(id) {
+        $("#order_detail_content").text(id)
+    }
+</script>

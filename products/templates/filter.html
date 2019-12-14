@@ -4,9 +4,11 @@
     <div class="sidebar-widget mb-50">
         <h3 class="sidebar-title">Search Products</h3>
         <div class="sidebar-search">
-            <form action="#">
-                <input placeholder="Search Products..." type="text">
-                <button><i class="ion-ios-search-strong"></i></button>
+            <form action="{% url 'search-product' %}" method="get">
+                <input required name="search_name" placeholder="Search Products..." type="text">
+                <button>
+                    <i class="ion-ios-search-strong"></i>
+                </button>
             </form>
         </div>
     </div>
@@ -14,8 +16,9 @@
         <h3 class="sidebar-title">Categories</h3>
         <div class="sidebar-categories">
             <ul>
+                <li><a href="/">All</a></li>
                 {% for item in catalog %}
-                    <li><a href="{% url 'catalog' id=item.name  %}">{{ item.name }}</a></li>
+                    <li><a href="{% url 'filter-catalog-product' item.id  %}">{{ item.name }}</a></li>
                 {% endfor %}
             </ul>
         </div>
@@ -27,7 +30,7 @@
                 {% for i in brand  %}
                     <li>
                         <h4>
-                            <a href="product/catalog/{{ i.id }}">{{ i.name }}</a>
+                            <a href="{% url 'filter-brand-product' i.id %}">{{ i.name }}</a>
                         </h4>
                     </li>
                 {% endfor %}

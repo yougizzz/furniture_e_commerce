@@ -33,6 +33,7 @@ class Order(models.Model):
     total = models.PositiveIntegerField(default=0)
     status = models.CharField(default='waiting', max_length=50, choices=[('waiting', 'waiting'),
                                                                          ('cancel', 'cancel'),
+                                                                         ('shipping', 'shipping'),
                                                                          ('complete', 'complete'), ])
 
     def __str__(self):

@@ -9,135 +9,208 @@
         </div>
 
         <div class="panel-group" id="userProfile">
-            <div class="panel panel-default">
-                <div class="panel-heading" data-toggle="collapse" data-target="#profile">
-                    <h4 class="panel-title">
-                        MY PROFILE
-                    </h4>
-                </div>
-                <div id="profile" class="panel-collapse collapse">
-                    <div class="panel-body">
-                        <div class="container" style="width: 650px">
-                            <form method="post" action="{% url 'update-info' %}">
-                                {% csrf_token %}
-                                {{ account.as_p }}
-                                {{ profile.as_p }}
-                                <div class="button-box text-center">
-                                    <button type="reset" class="default-btn" data-toggle="collapse"
-                                            data-target="#profile">
-                                        CANCEL
-                                    </button>
-                                    <button type="submit" class="default-btn">
-                                        SAVE
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="panel panel-default">
-                <div class="panel-heading" data-toggle="collapse" data-target="#address">
-                    <h4 class="panel-title ">
-                        MY ADDRESS
-                    </h4>
-                </div>
-                <div id="address" class="panel-collapse collapse">
-                    <div class="container" style="width: 650px">
-                        <div class="panel panel-default" style="margin-top: 20px; margin-bottom: 20px">
-                            <div class="panel-heading" data-toggle="collapse" data-target="#create_address">
-                                <h5 class="panel-title text-center">
-                                    Create New Address
-                                </h5>
+            {% for item in waiting_order %}
+                <div class="panel panel-default">
+                    <div style="vertical-align: middle;" class="panel-heading" data-toggle="collapse"
+                         data-target=#{{ item.id }}>
+                        <div class="row">
+                            <div class="col">
+                                <h4 class="panel-title">
+                                    Order {{ item.id }}
+                                </h4>
                             </div>
-                            <div id="create_address" class="panel-collapse collapse">
-                                <div class="panel-body">
-                                    <form method="post" action="{% url 'update-address' %}">
-                                        {% csrf_token %}
-                                        {{ address.as_p }}
-                                        <div class="button-box text-center">
-                                            <button type="reset" class="default-btn" data-toggle="collapse"
-                                                    data-target="#create_address">
-                                                CANCEL
-                                            </button>
-                                            <button type="submit" class="default-btn">
-                                                SAVE
-                                            </button>
-                                        </div>
-                                    </form>
-                                </div>
+                            <div class="col">
+                                <h4 class="panel-title">
+                                    Total: {{ item.total }}$
+                                </h4>
+                            </div>
+                            <div class="col col-lg-2">
+                                Status: {{ item.status }}
                             </div>
                         </div>
-
                     </div>
-                    <div style="margin: 20px">
-                        {% if my_address.count > 0 %}
-                            {% for item in my_address %}
-                                <div class="panel panel-info">
-                                    <h5 class="text-center" style="margin-top: 15px">
-                                        My address: number {{ item.number_address }}, {{ item.street }} street,
-                                        {{ item.ward }} ward, {{ item.district }} district, {{ item.provice }} provice
-                                        (city)
-                                    </h5>
-                                    <div class="button-box text-center" style="margin-bottom: 15px">
-                                        <button data-toggle="modal" data-target="#addressConfirm" class="default-btn"
-                                                onclick="confirm_remove_address({{ item.id }})">
-                                            REMOVE
-                                        </button>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        {% endif %}
-
-                    </div>
-
-                </div>
-            </div>
-            <div class="panel panel-default">
-                <div class="panel-heading" data-toggle="collapse" data-target="#order">
-                    <h4 class="panel-title">
-                        MY ORDER
-                    </h4>
-                </div>
-                <div id="order" class="panel-collapse collapse">
+                    <div id={{ item.id }} class="panel-collapse collapse
+                    ">
                     <div class="panel-body">
                         <div class="your-order-table table-responsive">
                             <table>
                                 <thead>
                                 <tr>
-                                    <th class="product-name">ID</th>
-                                    <th class="product-total">TOTAL</th>
-                                    <th class="product-total">DATE</th>
+                                    <th class="product-name">NAME</th>
+                                    <th class="product-price">PRICE</th>
+                                    <th class="product_image">IMAGE</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {% for i in order %}
+                                {% for j in waiting_order_item %}
+                                    {% if j.order_id == item.id %}
+                                        <tr>
+                                            <td>{{ j.item_name }}</td>
+                                            <td>{{ j.item_price }}$</td>
+                                            <td>
+                                                <img height="100" width="100" src="{{ j.item_image }}" alt="">
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                            <div class="text-center" style="padding-top: 20px">
+                                <div class="button-box text-center">
+                                    <button data-toggle="modal" data-target="#addressConfirm" class="default-btn" onclick="confirm_cancel_order({{ item.id }})">
+                                        CANCEL ORDER
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            {% endfor %}
+        <div class="panel panel-default">
+            <div class="panel-heading" data-toggle="collapse" data-target="#profile">
+                <h4 class="panel-title">
+                    MY PROFILE
+                </h4>
+            </div>
+            <div id="profile" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <div class="container" style="width: 650px">
+                        <form method="post" action="{% url 'update-info' %}">
+                            {% csrf_token %}
+                            {{ account.as_p }}
+                            {{ profile.as_p }}
+                            <div class="button-box text-center">
+                                <button type="reset" class="default-btn" data-toggle="collapse"
+                                        data-target="#profile">
+                                    CANCEL
+                                </button>
+                                <button type="submit" class="default-btn">
+                                    SAVE
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading" data-toggle="collapse" data-target="#address">
+                <h4 class="panel-title ">
+                    MY ADDRESS
+                </h4>
+            </div>
+            <div id="address" class="panel-collapse collapse">
+                <div class="container" style="width: 650px">
+                    <div class="panel panel-default" style="margin-top: 20px; margin-bottom: 20px">
+                        <div class="panel-heading" data-toggle="collapse" data-target="#create_address">
+                            <h5 class="panel-title text-center">
+                                Create New Address
+                            </h5>
+                        </div>
+                        <div id="create_address" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <form method="post" action="{% url 'update-address' %}">
+                                    {% csrf_token %}
+                                    {{ address.as_p }}
+                                    <div class="button-box text-center">
+                                        <button type="reset" class="default-btn" data-toggle="collapse"
+                                                data-target="#create_address">
+                                            CANCEL
+                                        </button>
+                                        <button type="submit" class="default-btn">
+                                            SAVE
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div style="margin: 20px">
+                    {% if my_address.count > 0 %}
+                        {% for item in my_address %}
+                            <div class="panel panel-info">
+                                <h5 class="text-center" style="margin-top: 15px">
+                                    My address: number {{ item.number_address }}, {{ item.street }} street,
+                                    {{ item.ward }} ward, {{ item.district }} district, {{ item.provice }} provice
+                                    (city)
+                                </h5>
+                                <div class="button-box text-center" style="margin-bottom: 15px">
+                                    <button data-toggle="modal" data-target="#addressConfirm" class="default-btn"
+                                            onclick="confirm_remove_address({{ item.id }})">
+                                        REMOVE
+                                    </button>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                </div>
+
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading" data-toggle="collapse" data-target="#order">
+                <h4 class="panel-title">
+                    MY ORDER
+                </h4>
+            </div>
+            <div id="order" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <div class="your-order-table table-responsive">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th class="product-name">ID</th>
+                                <th class="product-total">TOTAL</th>
+                                <th class="product-total">DATE</th>
+                                <th class="product-total">STATUS</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for i in order %}
+                                {% if i.status == "complete" or i.status == "cancel" %}
                                     <tr>
                                         <td>
                                             <a href="/order-detail/{{ i.id }}">{{ i.id }}</a>
                                         </td>
                                         <td>{{ i.total }} $</td>
                                         <td>{{ i.created }}</td>
+                                        {% if i.status == 'complete' %}
+                                            <td style="color: green">complete</td>
+                                        {% elif i.status == 'cancel' %}
+                                            <td style="color: red">cancel</td>
+                                        {% endif %}
                                     </tr>
-                                {% endfor %}
-                                </tbody>
-                                <tfoot>
-                                </tfoot>
-                            </table>
-                        </div>
-
+                                {% endif %}
+                            {% endfor %}
+                            </tbody>
+                            <tfoot>
+                            </tfoot>
+                        </table>
                     </div>
+
                 </div>
             </div>
         </div>
     </div>
+</div>
 </div>
 
 <script>
 
     function confirm_remove_address(id) {
         let remove_href = "/delete-address/" + id
+        $("#content_confirm").text("Do you want to remove?")
         $("#yes_btn").attr("href", remove_href)
+    }
+
+    function  confirm_cancel_order(id) {
+        let cancel_href = "/cancel-order/" + id
+        $("#content_confirm").text("Do you want to cancel?")
+        $("#yes_btn").attr("href", cancel_href)
     }
 
 </script>

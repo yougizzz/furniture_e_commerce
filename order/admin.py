@@ -11,7 +11,7 @@ class OrderItemAdmin(admin.ModelAdmin):
 
 class OrderAdmin(admin.ModelAdmin):
     list_display = ('user', 'address', 'total', 'ordered', 'status')
-    list_filter = ('user', )
+    list_filter = ('user', 'status')
     list_per_page = 20
 
 

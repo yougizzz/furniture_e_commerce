@@ -11,8 +11,47 @@
 <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
 <link rel="stylesheet" href="{% static 'assets/css/responsive.css' %}">
 
+<div class="container" style="padding-top: 160px">
+    <div class="section-title-others text-center mb-55">
+        <h2>Our Services</h2>
+        <p>Lorem ipsum dolor sit amet, con adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore
+            magna aliqua</p>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="about-single-service text-center mb-30">
+                <img src="{% static 'assets/img/icon-img/9.png' %}" alt="">
+                <h3>branding</h3>
+                <p>Lorem ipsum dolor sit amet, con adipi sicinglo elit, sed do eiusmod tempor</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="about-single-service text-center mb-30">
+                <img src="{% static 'assets/img/icon-img/10.png' %}" alt="">
+                <h3>Free Delivery</h3>
+                <p>Lorem ipsum dolor sit amet, con adipi sicinglo elit, sed do eiusmod tempor</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="about-single-service text-center mb-30">
+                <img src="{% static 'assets/img/icon-img/11.png' %}" alt="">
+                <h3>Gift Box</h3>
+                <p>Lorem ipsum dolor sit amet, con adipi sicinglo elit, sed do eiusmod tempor</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="shop-limited-area bg-img pt-90 pb-100" style="background-image: url(media/sku/nov19-living-tile.jpg)"
+     data-overlay="3">
+    <div class="container">
+        <div class="shop-limited-content text-center">
+            <h2>Shop Limited Edition.</h2>
+            <a class="btn-hover limited-btn" href="#">view more</a>
+        </div>
+    </div>
+</div>
 <div class="shop-page-wrapper hidden-items padding-filter">
-    <div class="container-fluid" style="padding-top: 50px">
+    <div class="container-fluid">
         <div class="shop-filters-left">
             {% include 'filter.html' %}
         </div>
@@ -25,7 +64,7 @@
                             <div class="custom-col-5 custom-col-style">
                                 <div class="single-product mb-35">
                                     <div class="product-img">
-                                        <a href="#">
+                                        <a href="/product/{{ item.name }}">
                                             <img src="{{ item.mainImage.url }}" alt="">
                                         </a>
                                         <div class="product-action">
@@ -65,9 +104,10 @@
                             <div class="col-md-12 col-lg-12 col-xl-6">
                                 <div class="single-product single-product-list product-list-right-pr mb-40">
                                     <div class="product-img list-img-width">
-                                        <a href="#"><img src="{{ item.mainImage.url }}" alt=""></a>
+                                        <a href="/product/{{ item.name }}"><img src="{{ item.mainImage.url }}" alt=""></a>
                                         <div class="product-action">
-                                            <a title="Quick View" onclick="show_product_detail_modal({{ item.id }})" href="#">
+                                            <a title="Quick View" onclick="show_product_detail_modal({{ item.id }})"
+                                               href="#">
                                                 <i class="ion-ios-eye-outline"></i>
                                             </a>
                                         </div>
@@ -153,6 +193,28 @@
     </div>
 </div>
 {% include 'product_modal.html' %}
+<hr>
+<div class="brand-logo ptb-100">
+    <div class="container">
+        <div class="brand-logo-active owl-carousel">
+            <div class="single-logo">
+                <img src="{% static 'assets/img/brand-logo/1.png' %}" alt="">
+            </div>
+            <div class="single-logo">
+                <img src="{% static 'assets/img/brand-logo/2.png' %}" alt="">
+            </div>
+            <div class="single-logo">
+                <img src="{% static 'assets/img/brand-logo/3.png' %}" alt="">
+            </div>
+            <div class="single-logo">
+                <img src="{% static 'assets/img/brand-logo/4.png' %}" alt="">
+            </div>
+            <div class="single-logo">
+                <img src="{% static 'assets/img/brand-logo/5.png' %}" alt="">
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <!-- all js here -->
