@@ -1,5 +1,9 @@
 {% load staticfiles %}
-<link rel="stylesheet" href="{% static 'assets/css/manager.css' %}">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.15.5/dist/bootstrap-table.min.css">
+<link rel="stylesheet" href="{% static './assets/css/manager.css' %}">
 
 <div class="col-sm-2" style="padding-left: 0px">
     <ul class="nav nav-stacked sidebar-wrapper">
@@ -8,14 +12,39 @@
                 <i class="glyphicon glyphicon-home" style="padding-right: 15px"></i> Home
             </a>
         </li>
+         <li role="presentation">
+            <a href="{% url 'manage-categories' %}" style="color: black; padding-left: 40px">
+                <i class="glyphicon glyphicon-list-alt" style="padding-right: 15px"></i> Categories
+            </a>
+        </li>
+         <li role="presentation">
+            <a href="{%  url 'manage-brand' %}" style="color: black; padding-left: 40px">
+                <i class="glyphicon glyphicon-barcode" style="padding-right: 15px"></i> Brand
+            </a>
+        </li>
+         <li role="presentation">
+            <a href="{% url 'manage-country' %}" style="color: black; padding-left: 40px">
+                <i class="glyphicon glyphicon-plane" style="padding-right: 15px"></i> Country
+            </a>
+        </li>
+         <li role="presentation">
+            <a href="{% url 'manage-material' %}" style="color: black; padding-left: 40px">
+                <i class="glyphicon glyphicon-leaf" style="padding-right: 15px"></i> Material
+            </a>
+        </li>
+         <li role="presentation">
+            <a href="{% url 'manage-product' %}" style="color: black; padding-left: 40px">
+                <i class="glyphicon glyphicon-tasks" style="padding-right: 15px"></i> Product
+            </a>
+        </li>
         <li role="presentation">
-            <a href="#" style="color: black; padding-left: 40px">
-                <i class="glyphicon glyphicon-tasks" style="padding-right: 15px"></i> Order
+            <a href="{% url 'manager-page' %}" style="color: black; padding-left: 40px">
+                <i class="glyphicon glyphicon-shopping-cart" style="padding-right: 15px"></i> Order
             </a>
         </li>
         <li role="presentation">
             <a href="#" style="color: black; padding-left: 40px">
-                <i class="glyphicon glyphicon-briefcase" style="padding-right: 15px"></i> Product
+                <i class="glyphicon glyphicon-briefcase" style="padding-right: 15px"></i> Statistic
             </a>
         </li>
     </ul>

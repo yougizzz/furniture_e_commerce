@@ -1,7 +1,7 @@
 from django import template
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
@@ -9,8 +9,11 @@ from django.views.generic import ListView
 from django.contrib.auth import authenticate, login, logout
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from .models import RegisterForm, UserAddress, UserProfile, UserAddressForm, UserProfileForm, UserAccount, \
-    Product, Categories, Brand
+    Product, Categories, Brand, BrandForm, Country, CountryForm, CategoriesForm, Material, MaterialForm, \
+    ProductForm
 from order.models import Order, OrderItem, Cart
+from django.http import JsonResponse
+from django.core import serializers
 
 register = template.Library()
 
@@ -68,7 +71,7 @@ def sigin(request):
                 return redirect('/')
             elif user and user.is_staff and user.is_superuser is False:
                 login(request, user)
-                return redirect(request, manager_page)
+                return redirect('/manager')
     form = AuthenticationForm()
     return render(request=request,
                   template_name="login.html",
@@ -323,6 +326,271 @@ def cancel_order(request, id):
     order.save()
     return redirect(page)
 
+
 @login_required
 def manager_page(request):
-    return render(request, 'manager/manage_order.html')
+    waiting_orders = Order.objects.filter(status='waiting')
+    return render(request, 'manager/manage_order.html', {'waiting_orders': waiting_orders})
+
+
+def show_order_detail(request, id):
+    data = OrderItem.objects.filter(order_id=id)
+    return render(request, 'manager/order_popup.html', {'order_detail': data})
+
+
+def manage_brand(request):
+    brand = Brand.objects.filter(active=True)
+    page = request.GET.get('page')
+    paging = Paginator(brand, 10)
+    list_brand = paging.get_page(page)
+    return render(request, 'manager/manage_brand.html', {'brand': list_brand})
+
+
+def show_brand(request, id):
+    brand = get_object_or_404(Brand, pk=id)
+    brand_form = BrandForm(instance=brand)
+    if request.method == 'POST':
+        form = BrandForm(request.POST, instance=brand)
+        if form.is_valid():
+            brand.code = form['code'].value()
+            brand.name = form['name'].value()
+            brand.save()
+    return render(request, 'manager/brand.html', {'brand_form': brand_form, 'id': id, 'result': None})
+
+
+def modify_brand(request, id):
+    brand = get_object_or_404(Brand, pk=id)
+    if request.method == 'POST':
+        form = BrandForm(request.POST, instance=brand)
+        if form.is_valid():
+            brand.code = form['code'].value()
+            brand.name = form['name'].value()
+            brand.save()
+            return render(request, 'manager/brand.html', {'brand_form': form, 'id': id, 'result': 'OK'})
+    return redirect('/brand')
+
+
+def create_brand(request):
+    brand_form = BrandForm()
+    return render(request, 'manager/brand.html', {'brand_form': brand_form, 'result': None})
+
+
+def execute_brand(request):
+    if request.method == 'POST':
+        form = BrandForm(request.POST)
+        error = form.errors
+        if form.is_valid():
+            result = form.save()
+            return render(request, 'manager/brand.html', {'brand_form': form, 'id': id, 'result': 'OK'})
+        return render(request, 'manager/brand.html', {'brand_form': form, 'id': id, 'result': None, 'error': error})
+    return redirect('create-brand')
+
+
+def manage_country(request):
+    countries = Country.objects.filter(active=True)
+    page = request.GET.get('page')
+    paging = Paginator(countries, 10)
+    list_countries = paging.get_page(page)
+    return render(request, 'manager/manage_country.html', {'countries': list_countries})
+
+
+def show_country(request, id):
+    countries = get_object_or_404(Country, pk=id)
+    country_form = CountryForm(instance=countries)
+    return render(request, 'manager/country.html', {'country_form': country_form, 'id': id, 'result': None})
+
+
+def modify_country(request, id):
+    countries = get_object_or_404(Country, pk=id)
+    if request.method == 'POST':
+        form = CountryForm(request.POST, instance=countries)
+        if form.is_valid():
+            countries.code = form['code'].value()
+            countries.name = form['name'].value()
+            countries.save()
+            return render(request, 'manager/country.html', {'country_form': form, 'id': id, 'result': 'OK'})
+    return redirect('/country')
+
+
+def create_country(request):
+    country_form = CountryForm()
+    return render(request, 'manager/country.html', {'country_form': country_form, 'result': None})
+
+
+def execute_country(request):
+    if request.method == 'POST':
+        form = CountryForm(request.POST)
+        error = form.errors
+        if form.is_valid():
+            result = form.save()
+            return render(request, 'manager/country.html', {'country_form': form, 'id': id, 'result': 'OK'})
+        return render(request, 'manager/country.html', {'country_form': form, 'id': id, 'result': None, 'error': error})
+    return redirect('create-country')
+
+
+def manage_category(request):
+    categories = Categories.objects.filter(active=True)
+    page = request.GET.get('page')
+    paging = Paginator(categories, 10)
+    list_categories = paging.get_page(page)
+    return render(request, 'manager/manage_categories.html', {'categories': list_categories})
+
+
+def show_category(request, id):
+    categories = get_object_or_404(Categories, pk=id)
+    categories_form = CategoriesForm(instance=categories)
+    return render(request, 'manager/categories.html', {'categories_form': categories_form, 'id': id, 'result': None})
+
+
+def modify_category(request, id):
+    categories = get_object_or_404(Categories, pk=id)
+    if request.method == 'POST':
+        form = CountryForm(request.POST, instance=categories)
+        if form.is_valid():
+            categories.code = form['code'].value()
+            categories.name = form['name'].value()
+            categories.save()
+            return render(request, 'manager/categories.html', {'categories_form': form, 'id': id, 'result': 'OK'})
+    return redirect('/categories')
+
+
+def create_category(request):
+    categories_form = CategoriesForm()
+    return render(request, 'manager/categories.html', {'categories_form': categories_form, 'result': None})
+
+
+def execute_category(request):
+    if request.method == 'POST':
+        form = CategoriesForm(request.POST)
+        error = form.errors
+        if form.is_valid():
+            result = form.save()
+            return render(request, 'manager/categories.html', {'categories_form': form, 'id': id, 'result': 'OK'})
+        return render(request, 'manager/categories.html', {'categories_form': form, 'id': id, 'result': None, 'error': error})
+    return redirect('create-categories')
+
+
+def manage_material(request):
+    material = Material.objects.filter(active=True)
+    page = request.GET.get('page')
+    paging = Paginator(material, 10)
+    list_countries = paging.get_page(page)
+    return render(request, 'manager/manage_material.html', {'material': list_countries})
+
+
+def show_material(request, id):
+    material = get_object_or_404(Material, pk=id)
+    material_form = MaterialForm(instance=material)
+    return render(request, 'manager/material.html', {'material_form': material_form, 'id': id, 'result': None})
+
+
+def modify_material(request, id):
+    material = get_object_or_404(Material, pk=id)
+    if request.method == 'POST':
+        form = MaterialForm(request.POST, instance=material)
+        if form.is_valid():
+            material.code = form['code'].value()
+            material.name = form['name'].value()
+            material.save()
+            return render(request, 'manager/material.html', {'material_form': form, 'id': id, 'result': 'OK'})
+    return redirect('/material')
+
+
+def create_material(request):
+    material_form = MaterialForm()
+    return render(request, 'manager/material.html', {'material_form': material_form, 'result': None})
+
+
+def execute_material(request):
+    if request.method == 'POST':
+        form = MaterialForm(request.POST)
+        error = form.errors
+        if form.is_valid():
+            result = form.save()
+            return render(request, 'manager/material.html', {'material_form': form, 'id': id, 'result': 'OK'})
+        return render(request, 'manager/material.html', {'material_form': form, 'id': id, 'result': None, 'error': error})
+    return redirect('create-material')
+
+
+def manage_product(request):
+    product = Product.objects.filter(active=True)
+    page = request.GET.get('page')
+    paging = Paginator(product, 5)
+    list_product = paging.get_page(page)
+    return render(request, 'manager/manage_product.html', {'product': list_product})
+
+
+def show_product(request, id):
+    product = get_object_or_404(Product, pk=id)
+    product_form = ProductForm(instance=product)
+    return render(request, 'manager/product.html', {'product_form': product_form, 'id': id, 'result': None})
+
+
+def modify_product(request, id):
+    product = get_object_or_404(Product, pk=id)
+    if request.method == 'POST':
+        form = ProductForm(request.POST, request.FILES,instance=product)
+        if form.is_valid():
+            product.name = form['name'].value()
+            product.price = form['price'].value()
+            product.quantity = form['quantity'].value()
+            product.color_id = form['color'].value()
+            product.material_id = form['material'].value()
+            product.categories_id = form['categories'].value()
+            product.detail = form['detail'].value()
+            product.country_id = form['country'].value()
+            product.description = form['description'].value()
+            product.mainImage = form['mainImage'].value()
+            product.save()
+            return render(request, 'manager/product.html', {'product_form': form, 'id': id, 'result': 'OK'})
+    return redirect('/product')
+
+
+def create_product(request):
+    product_form = ProductForm()
+    return render(request, 'manager/product.html', {'product_form': product_form, 'result': None})
+
+
+def execute_product(request):
+    if request.method == 'POST':
+        form = ProductForm(request.POST, request.FILES)
+        error = form.errors
+        if form.is_valid():
+            result = form.save()
+            return render(request, 'manager/product.html', {'product_form': form, 'id': id, 'result': 'OK'})
+        return render(request, 'manager/product.html', {'product_form': form, 'id': id, 'result': None, 'error': error})
+    return redirect('create-product')
+
+
+def delete_brand(request, id):
+    brand = get_object_or_404(Brand, pk=id)
+    brand.active = False
+    brand.save()
+    return redirect('manage-brand')
+
+
+def delete_material(request, id):
+    material = get_object_or_404(Material, pk=id)
+    material.active = False
+    material.save()
+    return redirect('manage-material')
+
+
+def delete_country(request, id):
+    country = get_object_or_404(Country, pk=id)
+    country.active = False
+    country.save()
+    return redirect('manage-country')
+
+
+def delete_categories(request, id):
+    categories = get_object_or_404(Categories, pk=id)
+    categories.active = False
+    categories.save()
+    return redirect('manage-categories')
+
+def delete_product(request, id):
+    product = get_object_or_404(Product, pk=id)
+    product.active = False
+    product.save()
+    return redirect('manage-product')

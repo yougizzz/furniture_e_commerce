@@ -1,0 +1,96 @@
+<div class="row" style="margin: 0">
+    {% include 'manager/sidebar.html' %}
+    <div class="col-sm-10">
+        <ol class="breadcrumb text-center" style="margin-top: 15px">
+            <h4>BRAND</h4>
+        </ol>
+        <div>
+            <a href="/brand-create"  class="btn btn-info pull-right" style="margin-bottom: 10px">
+                Create <i class="glyphicon glyphicon-plus"></i>
+            </a>
+
+            <table class="table table-hover text-center">
+                <thead>
+                <tr class="active">
+                    <th class="text-center">ID</th>
+                    <th class="text-center">CODE</th>
+                    <th class="text-center">NAME</th>
+                    <th class="text-center">ACTION</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in brand %}
+                    <tr>
+
+                        <td>{{ item.id }}</td>
+                        <td>{{ item.code }}</td>
+                        <td>{{ item.name }}</td>
+                        <td>
+                            <a href="{% url 'modify-brand' item.id %}">View</a> |
+                            <a href="#" style="color: red" data-toggle="modal" data-target="#confirmDelete"
+                            onclick="delete_brand({{ item.id }})">
+                                Delete
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <div class="pull-right">
+                {% if brand.has_other_pages %}
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination">
+                            {% if brand.has_previous %}
+                                <li>
+                                    <a href="?page={{ brand.previous_page_number }}" aria-label="Previous">
+                                        <span aria-hidden="true">&xlarr;</span>
+                                    </a>
+                                </li>
+                            {% else %}
+                                <li class="disabled">
+                                    <a href="#" aria-label="Previous">
+                                        <span>&xlarr;</span>
+                                    </a>
+                                </li>
+                            {% endif %}
+                            {% for i in brand.paginator.page_range %}
+                                {% if brand.number == i %}
+                                    <li class="active">
+                                        <a href="#">
+                                            {{ i }}
+                                        </a>
+                                    </li>
+                                {% else %}
+                                    <li>
+                                        <a href="?page={{ i }}">{{ i }}</a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                            {% if brand.has_next %}
+                                <li>
+                                    <a href="?page={{ brand.next_page_number }}">
+                                        <span>&xrarr;</span>
+                                    </a>
+                                </li>
+                            {% else %}
+                                <li class="disabled">
+                                    <a class="btn-hover list-btn-style" href="#">
+                                        <span>&xrarr;</span>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function delete_brand(id) {
+        let remove_href = "/brand-delete/" + id
+        $("#confirm_yes").attr("href", remove_href)
+    }
+</script>
+{% include 'manager/modal_confirm.html' %}

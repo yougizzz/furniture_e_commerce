@@ -11,6 +11,7 @@ from django.contrib.auth.models import User
 class Brand(models.Model):
     name = models.CharField(max_length=200, blank=False, null=False, unique=True)
     code = models.CharField(max_length=200, blank=False, null=False, unique=True)
+    active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name
@@ -19,6 +20,7 @@ class Brand(models.Model):
 class Categories(models.Model):
     name = models.CharField(max_length=200, blank=False, null=False, unique=True)
     code = models.CharField(max_length=200, blank=False, null=False, unique=True)
+    active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name
@@ -27,6 +29,7 @@ class Categories(models.Model):
 class Color(models.Model):
     name = models.CharField(max_length=200, blank=False, null=False, unique=True)
     code = models.CharField(max_length=200, blank=False, null=False, unique=True)
+    active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name
@@ -35,6 +38,7 @@ class Color(models.Model):
 class Country(models.Model):
     name = models.CharField(max_length=200, blank=False, null=False, unique=True)
     code = models.CharField(max_length=200, blank=False, null=False, unique=True)
+    active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name
@@ -43,6 +47,7 @@ class Country(models.Model):
 class Material(models.Model):
     name = models.CharField(max_length=200, blank=False, null=False, unique=True)
     code = models.CharField(max_length=200, blank=False, null=False, unique=True)
+    active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name
@@ -60,6 +65,7 @@ class Product(models.Model):
     color = models.ForeignKey(Color, on_delete=models.CASCADE)
     categories = models.ForeignKey(Categories, on_delete=models.CASCADE)
     mainImage = models.ImageField(upload_to='sku')
+    active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name
@@ -124,6 +130,7 @@ class UserAddress(models.Model):
     ward = models.CharField(max_length=100)
     street = models.CharField(max_length=200)
     number_address = models.CharField(max_length=100)
+    active = models.BooleanField(default=True)
 
     def __str__(self):
         return f'{self.number_address, self.street, self.ward, self.district, self.provice}'
@@ -139,6 +146,42 @@ class UserAddressForm(forms.ModelForm):
         if commit:
             user_save.save()
         return user_save
+
+
+class BrandForm(forms.ModelForm):
+    class Meta:
+        model = Brand
+        fields = ('code', 'name')
+
+
+class CountryForm(forms.ModelForm):
+    class Meta:
+        model = Country
+        fields = ('code', 'name')
+
+
+class CategoriesForm(forms.ModelForm):
+    class Meta:
+        model = Categories
+        fields = ('code', 'name')
+
+
+class MaterialForm(forms.ModelForm):
+    class Meta:
+        model = Material
+        fields = ('code', 'name')
+
+
+class ProductForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = ('name', 'price', 'quantity', 'detail',
+                  'description', 'brand', 'material', 'color',
+                  'country', 'categories', 'mainImage')
+
+    def __init__(self, *args, **kwargs):
+        super(ProductForm, self).__init__(*args, **kwargs)
+        self.fields['mainImage'].required = False
 
 #
 # class Cart(models.Model):

@@ -6,6 +6,14 @@
     <div class="container" style="margin-top: 100px">
         <div class="text-center">
             <h1 style="font-size: 80px" class="ion ion-android-person"></h1>
+            <div style="margin-top: 15px">
+                <ul class="nav nav-tabs">
+                    <li role="presentation" class="active"><a href="#">Order Waiting</a></li>
+                    <li role="presentation"><a href="#">Order Shipping</a></li>
+                    <li role="presentation"><a href="#">Oder Complete</a></li>
+                    <li role="presentation"><a href="#">Oder Cancel</a></li>
+                </ul>
+            </div>
         </div>
 
         <div class="panel-group" id="userProfile">
@@ -57,7 +65,8 @@
                             </table>
                             <div class="text-center" style="padding-top: 20px">
                                 <div class="button-box text-center">
-                                    <button data-toggle="modal" data-target="#addressConfirm" class="default-btn" onclick="confirm_cancel_order({{ item.id }})">
+                                    <button data-toggle="modal" data-target="#addressConfirm" class="default-btn"
+                                            onclick="confirm_cancel_order({{ item.id }})">
                                         CANCEL ORDER
                                     </button>
                                 </div>
@@ -207,7 +216,7 @@
         $("#yes_btn").attr("href", remove_href)
     }
 
-    function  confirm_cancel_order(id) {
+    function confirm_cancel_order(id) {
         let cancel_href = "/cancel-order/" + id
         $("#content_confirm").text("Do you want to cancel?")
         $("#yes_btn").attr("href", cancel_href)

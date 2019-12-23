@@ -7,10 +7,10 @@
     <table class="table table-hover text-center">
         <thead>
         <tr class="active">
-            <th class="text-center">VIEW</th>
             <th class="text-center">ID</th>
             <th class="text-center">DATE</th>
             <th class="text-center">CUSTOMER</th>
+            <th class="text-center">DETAIL</th>
             <th class="text-center">TOTAL</th>
             <th class="text-center">ADDRESS</th>
             <th class="text-center">ACTION</th>
@@ -19,21 +19,33 @@
         <tbody id="myTable">
         {% for item in waiting_orders %}
             <tr>
-                <td>
-                    <a href="{% url 'show-order-info' item.id %}">view detail</a>
-                </td>
                 <td>{{ item.id }}</td>
                 <td>{{ item.created|date }}</td>
                 <td style="max-width: 250px">
-                    {{ item.user.first_name }} {{ item.user.last_name }}
+                    {% for key, values in user.items %}
+                        <address>
+                            {% if key == item.user_id %}
+                                {{ values.first_name }} {{ values.last_name }}
+                            {% endif %}
+                        </address>
+                    {% endfor %}
+                </td>
+                <td>
+                    <a onclick="show_detail({{ item.id }})">
+                        <i class="glyphicon glyphicon-list"></i> details
+                    </a>
                 </td>
                 <td>{{ item.total }}$</td>
                 <td style="max-width: 250px">
-                    <address>
-                        number {{ item.address.number_address }}, {{ item.address.street }} street,
-                        {{ item.address.ward }} ward, {{ item.address.district }} district,
-                        {{ item.address.provice }} provide(city)
-                    </address>
+                    {% for key, values in address.items %}
+                        <address>
+                            {% if key == item.address_id %}
+                                number {{ values.number_address }}, {{ values.street }} street,
+                                {{ values.ward }} ward, {{ values.district }} district,
+                                {{ values.provice }} provide(city)
+                            {% endif %}
+                        </address>
+                    {% endfor %}
                 </td>
                 <td style="width: 400px">
                     <form action="" class="form-inline">
@@ -48,6 +60,7 @@
                     </form>
                 </td>
             </tr>
+
         {% endfor %}
         </tbody>
     </table>
@@ -62,7 +75,6 @@
     </div>
 </div>
 
-
 <script>
     $(document).ready(function () {
         $("#myInput").on("keyup", function () {
@@ -72,4 +84,34 @@
             });
         });
     });
+</script>
+<script>
+    function view_order_detail(id) {
+        $("#order_detail_content").text(id)
+    }
+
+    function show_detail(id) {
+        var order_info = $("#show_order_detail");
+        order_info.html('')
+        $.ajax({
+            url: '/order-info/' + id,
+            type: 'GET',
+            success: function (data) {
+                alert('success')
+                var list = ''
+                console.log(data)
+                $.each(data, function (key, item) {
+                    list += '<tr>' + '<td>' + item.id + '</td>'
+                        + '<td>' + 'ok' + '</td>'
+                        + '<td>' + 'ok' + '</td>'
+                        + '<td>' + 'ok' + '</td>' + '</tr>';
+                });
+                $('#show_order_detail tbody').html(list);
+            },
+            error:
+                function () {
+                    alert('no data')
+                }
+        })
+    }
 </script>

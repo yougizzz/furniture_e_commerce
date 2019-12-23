@@ -5,3 +5,99 @@
     color: white;
     font-weight: bold;
 }
+
+.login_form_container {
+  background: transparent none repeat scroll 0 0;
+  border: 1px solid #ddd;
+  padding: 60px 40px;
+  text-align: left;
+  margin-top: 20px;
+}
+.login_text {
+  margin-bottom: 30px;
+  text-align: center;
+}
+.login_text h2 {
+  color: #444;
+  font-size: 30px;
+  margin-bottom: 5px;
+  text-transform: capitalize;
+}
+.login_text span {
+  font-size: 15px;
+}
+.login_form_container input,select {
+  background: #ffffff none repeat scroll 0 0;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  box-shadow: none;
+  color: #999;
+  font-size: 14px;
+  height: 40px;
+  margin-bottom: 20px;
+  padding-left: 10px;
+  padding-right: 10px;
+  width: 100%;
+}
+
+.login_form_container textarea {
+  background: #ffffff none repeat scroll 0 0;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  box-shadow: none;
+  color: #999;
+  font-size: 14px;
+  margin-bottom: 20px;
+  padding-left: 10px;
+  padding-right: 10px;
+  width: 100%;
+}
+
+.login_form_container input::-moz-placeholder {
+  color: #999;
+  opacity: 1;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+}
+.login_toggle_btn {
+  padding-top: 10px;
+}
+.login_form_container input[type="checkbox"]{
+  height: 15px;
+  margin: 0;
+  position: relative;
+  top: 1px;
+  width: 17px;
+}
+.login_form_container label {
+  color: #777;
+  font-size: 15px;
+  font-weight: 400;
+}
+/*.login_toggle_btn > a {*/
+  /*color: #777;*/
+  /*float: right;*/
+  /*-webkit-transition: all 0.3s ease 0s;*/
+  /*transition: all 0.3s ease 0s;*/
+/*}*/
+/*.login_toggle_btn > a:hover {*/
+  /*color: #000;*/
+/*}*/
+/*.button_box .default_btn {*/
+  /*background: transparent none repeat scroll 0 0;*/
+  /*border: 1px solid #ddd;*/
+  /*color: #777;*/
+  /*font-size: 14px;*/
+  /*line-height: 1;*/
+  /*margin-top: 25px;*/
+  /*padding: 12px 36px 10px;*/
+  /*text-transform: uppercase;*/
+  /*-webkit-transition: all 0.3s ease 0s;*/
+  /*transition: all 0.3s ease 0s;*/
+/*}*/
+/*.button_box .default_btn:hover {*/
+  /*background-color: #ee3333;*/
+  /*border: 1px solid #ee3333;*/
+  /*color: #fff;*/
+/*}*/
+
+
