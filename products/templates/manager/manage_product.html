@@ -2,7 +2,7 @@
     {% include 'manager/sidebar.html' %}
     <div class="col-sm-10">
         <ol class="breadcrumb text-center" style="margin-top: 15px">
-            <h4>PRODUCT</h4>
+            <b>PRODUCT</b>
         </ol>
         <div>
             <div class="pull-left" style="width: 250px; margin-bottom: 15px">
@@ -21,6 +21,7 @@
                     <th class="text-center">PRICE</th>
                     <th class="text-center">MATERIAL</th>
                     <th class="text-center">CATEGORIES</th>
+                    <th class="text-center">STATUS</th>
                     <th class="text-center">IMAGE</th>
                     <th class="text-center">ACTION</th>
                 </tr>
@@ -34,16 +35,28 @@
                         <td>{{ item.quantity }}</td>
                         <td>{{ item.price }}</td>
                         <td>{{ item.material.name }}</td>
+
+                        <td>{{ item.categories.name }}</td>
+                        {% if item.active %}
+                            <td>
+                                <i class="glyphicon glyphicon-ok-circle" style="color: green"></i>
+                            </td>
+                        {% else %}
+                            <td>
+                                <i class="glyphicon glyphicon-remove-circle" style="color: red"></i>
+                            </td>
+                        {% endif %}
                         <td>
                             <img height="50" width="50" src="{{ item.mainImage.url }}" alt="">
                         </td>
-                        <td>{{ item.categories.name }}</td>
                         <td>
-                            <a href="{% url 'modify-product' item.id %}">View</a> |
-                            <a href="#" style="color: red" data-toggle="modal" data-target="#confirmDelete"
-                            onclick="delete_product({{ item.id }})">
-                                Delete
-                            </a>
+                            <a href="{% url 'modify-product' item.id %}">View</a>
+                            {% if item.active %}
+                               | <a href="#" style="color: red" data-toggle="modal" data-target="#confirmDelete"
+                                   onclick="delete_product({{ item.id }})">
+                                    Delete
+                                </a>
+                            {% endif %}
                         </td>
                     </tr>
                 {% endfor %}
@@ -79,7 +92,7 @@
                                     </li>
                                 {% endif %}
                             {% endfor %}
-                            {% if material.has_next %}
+                            {% if product.has_next %}
                                 <li>
                                     <a href="?page={{ product.next_page_number }}">
                                         <span>&xrarr;</span>

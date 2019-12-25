@@ -2,10 +2,10 @@
     {% include 'manager/sidebar.html' %}
     <div class="col-sm-10">
         <ol class="breadcrumb text-center" style="margin-top: 15px">
-            <h4>MATERIAL</h4>
+            <b>MATERIAL</b>
         </ol>
         <div>
-            <a href="/material-create"  class="btn btn-info pull-right" style="margin-bottom: 10px">
+            <a href="/material-create" class="btn btn-info pull-right" style="margin-bottom: 10px">
                 Create <i class="glyphicon glyphicon-plus"></i>
             </a>
 
@@ -15,6 +15,7 @@
                     <th class="text-center">ID</th>
                     <th class="text-center">CODE</th>
                     <th class="text-center">NAME</th>
+                    <th class="text-center">STATUS</th>
                     <th class="text-center">ACTION</th>
                 </tr>
                 </thead>
@@ -25,12 +26,23 @@
                         <td>{{ item.id }}</td>
                         <td>{{ item.code }}</td>
                         <td>{{ item.name }}</td>
+                        {% if item.active %}
+                            <td>
+                                <i class="glyphicon glyphicon-ok-circle" style="color: green"></i>
+                            </td>
+                        {% else %}
+                            <td>
+                                <i class="glyphicon glyphicon-remove-circle" style="color: red"></i>
+                            </td>
+                        {% endif %}
                         <td>
-                            <a href="{% url 'modify-material' item.id %}">View</a> |
-                            <a href="#" style="color: red" data-target="#confirmDelete" data-toggle="modal"
-                            onclick="delete_material({{ item.id }})">
-                                Delete
-                            </a>
+                            <a href="{% url 'modify-material' item.id %}">View</a>
+                            {% if item.active %}
+                               | <a href="#" style="color: red" data-target="#confirmDelete" data-toggle="modal"
+                                   onclick="delete_material({{ item.id }})">
+                                    Delete
+                                </a>
+                            {% endif %}
                         </td>
                     </tr>
                 {% endfor %}

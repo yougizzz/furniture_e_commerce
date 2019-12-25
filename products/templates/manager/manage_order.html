@@ -15,23 +15,337 @@
 <div>
     <div class="row" style="margin: 0">
         {% include 'manager/sidebar.html' %}
-                <div class="col-sm-10">
-                    <div style="margin-top: 15px">
-                        <ul class="nav nav-tabs">
-                            <li role="presentation" class="active"><a href="#">Order Waiting</a></li>
-                            <li role="presentation"><a href="#">Order Shipping</a></li>
-                            <li role="presentation"><a href="#">Oder Complete</a></li>
-                            <li role="presentation"><a href="#">Oder Cancel</a></li>
+        <div class="col-sm-10">
+            <div style="margin-top: 15px">
+                <ul class="nav nav-tabs">
+                    <li id="waiting" onclick="view_waiting_order()" role="presentation" class="active">
+                        <a href="#">Order Waiting</a>
+                    </li>
+                    <li id="shipping" onclick="view_shipping_order()" role="presentation">
+                        <a href="#">Order Shipping</a>
+                    </li>
+                    <li id="complete" role="presentation" onclick="view_complete_order()">
+                        <a href="#">Oder Complete</a>
+                    </li>
+                    <li id="cancel" role="presentation" onclick="view_cancel_order()">
+                        <a href="#">Oder Cancel</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div>
+                <!-- order waiting -->
+                <div id="order_waiting" style="margin-top: 15px">
+                    <h4 class="text-center">Order Waiting</h4>
+                    <div class="pull-right" style="width: 250px; margin-bottom: 15px">
+                        <input class="form-control" id="waitingInput" type="text" placeholder="Search..">
+                    </div>
+                    <table class="table table-hover text-center">
+                        <thead>
+                        <tr class="active">
+                            <th class="text-center">VIEW</th>
+                            <th class="text-center">ID</th>
+                            <th class="text-center">DATE</th>
+                            <th class="text-center">CUSTOMER</th>
+                            <th class="text-center">TOTAL</th>
+                            <th class="text-center">ADDRESS</th>
+                            <th class="text-center">ACTION</th>
+                        </tr>
+                        </thead>
+                        <tbody id="myTable">
+                        {% for item in waiting_orders %}
+                            <tr>
+                                <td>
+                                    <a href="{% url 'show-order-info' item.id %}">view detail</a>
+                                </td>
+                                <td>{{ item.id }}</td>
+                                <td>{{ item.created|date }}</td>
+                                <td style="max-width: 250px">
+                                    {{ item.user.first_name }} {{ item.user.last_name }}
+                                </td>
+                                <td>{{ item.total }}$</td>
+                                <td style="max-width: 250px">
+                                    <address>
+                                        number {{ item.address.number_address }}, {{ item.address.street }} street,
+                                        {{ item.address.ward }} ward, {{ item.address.district }} district,
+                                        {{ item.address.provice }} provide(city)
+                                    </address>
+                                </td>
+                                <td style="width: 400px">
+                                    <select id="select-waiting" class="form-control" onchange="get_select_value({{ item.id }})">
+                                        <option value="" disabled selected>Waiting</option>
+                                        <option value="Shipping">
+                                            Shipping
+                                        </option>
+                                        <option value="Cancel">
+                                            Cancel
+                                        </option>
+                                    </select>
+
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    <div class="pull-right">
+                        <ul class="pagination">
+                            <li class="active"><a href="#">1</a></li>
+                            <li><a href="#">2</a></li>
+                            <li><a href="#">3</a></li>
+                            <li><a href="#">4</a></li>
+                            <li><a href="#">5</a></li>
                         </ul>
                     </div>
-
-                    <div>
-                        {% include 'manager/order_waiting.html' %}
-                    </div>
-
                 </div>
+
+                <!-- order shipping -->
+                <div id="order_shipping" style="margin-top: 15px; display: none">
+                    <h4 class="text-center">Order Shipping</h4>
+                    <div class="pull-right" style="width: 250px; margin-bottom: 15px">
+                        <input class="form-control" id="shippingInput" type="text" placeholder="Search..">
+                    </div>
+                    <table class="table table-hover text-center">
+                        <thead>
+                        <tr class="active">
+                            <th class="text-center">VIEW</th>
+                            <th class="text-center">ID</th>
+                            <th class="text-center">DATE</th>
+                            <th class="text-center">CUSTOMER</th>
+                            <th class="text-center">TOTAL</th>
+                            <th class="text-center">ADDRESS</th>
+                            <th class="text-center">ACTION</th>
+                        </tr>
+                        </thead>
+                        <tbody id="myTable">
+                        {% for item in shipping_order %}
+                            <tr>
+                                <td>
+                                    <a href="{% url 'show-order-info' item.id %}">view detail</a>
+                                </td>
+                                <td>{{ item.id }}</td>
+                                <td>{{ item.created|date }}</td>
+                                <td style="max-width: 250px">
+                                    {{ item.user.first_name }} {{ item.user.last_name }}
+                                </td>
+                                <td>{{ item.total }}$</td>
+                                <td style="max-width: 250px">
+                                    <address>
+                                        number {{ item.address.number_address }}, {{ item.address.street }} street,
+                                        {{ item.address.ward }} ward, {{ item.address.district }} district,
+                                        {{ item.address.provice }} provide(city)
+                                    </address>
+                                </td>
+                                <td style="width: 400px">
+                                    <select class="form-control" id="select-shipping" onchange="get_select_value({{ item.id }})">
+                                        <option value="" disabled selected>Shipping</option>
+                                        <option value="Complete">
+                                            Complete
+                                        </option>
+                                        <option value="Cancel">
+                                            Cancel
+                                        </option>
+                                    </select>
+
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    <div class="pull-right">
+                        <ul class="pagination">
+                            <li class="active"><a href="#">1</a></li>
+                            <li><a href="#">2</a></li>
+                            <li><a href="#">3</a></li>
+                            <li><a href="#">4</a></li>
+                            <li><a href="#">5</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- order cancel -->
+                <div id="order_cancel" style="margin-top: 15px; display: none">
+                    <h4 class="text-center">Order Cancel</h4>
+                    <div class="pull-right" style="width: 250px; margin-bottom: 15px">
+                        <input class="form-control" id="cancelInput" type="text" placeholder="Search..">
+                    </div>
+                    <table class="table table-hover text-center">
+                        <thead>
+                        <tr class="active">
+                            <th class="text-center">VIEW</th>
+                            <th class="text-center">ID</th>
+                            <th class="text-center">DATE</th>
+                            <th class="text-center">CUSTOMER</th>
+                            <th class="text-center">TOTAL</th>
+                            <th class="text-center">ADDRESS</th>
+                        </tr>
+                        </thead>
+                        <tbody id="myTable">
+                        {% for item in cancel_order %}
+                            <tr>
+                                <td>
+                                    <a href="{% url 'show-order-info' item.id %}">view detail</a>
+                                </td>
+                                <td>{{ item.id }}</td>
+                                <td>{{ item.created|date }}</td>
+                                <td style="max-width: 250px">
+                                    {{ item.user.first_name }} {{ item.user.last_name }}
+                                </td>
+                                <td>{{ item.total }}$</td>
+                                <td style="max-width: 250px">
+                                    <address>
+                                        number {{ item.address.number_address }}, {{ item.address.street }} street,
+                                        {{ item.address.ward }} ward, {{ item.address.district }} district,
+                                        {{ item.address.provice }} provide(city)
+                                    </address>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    <div class="pull-right">
+                        <ul class="pagination">
+                            <li class="active"><a href="#">1</a></li>
+                            <li><a href="#">2</a></li>
+                            <li><a href="#">3</a></li>
+                            <li><a href="#">4</a></li>
+                            <li><a href="#">5</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- order complete -->
+                <div id="order_complete" style="margin-top: 15px; display: none">
+                    <h4 class="text-center">Order Complete</h4>
+                    <div class="pull-right" style="width: 250px; margin-bottom: 15px">
+                        <input class="form-control" id="completeInput" type="text" placeholder="Search..">
+                    </div>
+                    <table class="table table-hover text-center">
+                        <thead>
+                        <tr class="active">
+                            <th class="text-center">VIEW</th>
+                            <th class="text-center">ID</th>
+                            <th class="text-center">DATE</th>
+                            <th class="text-center">CUSTOMER</th>
+                            <th class="text-center">TOTAL</th>
+                            <th class="text-center">ADDRESS</th>
+                        </tr>
+                        </thead>
+                        <tbody id="myTable">
+                        {% for item in complete_order %}
+                            <tr>
+                                <td>
+                                    <a href="{% url 'show-order-info' item.id %}">view detail</a>
+                                </td>
+                                <td>{{ item.id }}</td>
+                                <td>{{ item.created|date }}</td>
+                                <td style="max-width: 250px">
+                                    {{ item.user.first_name }} {{ item.user.last_name }}
+                                </td>
+                                <td>{{ item.total }}$</td>
+                                <td style="max-width: 250px">
+                                    <address>
+                                        number {{ item.address.number_address }}, {{ item.address.street }} street,
+                                        {{ item.address.ward }} ward, {{ item.address.district }} district,
+                                        {{ item.address.provice }} provide(city)
+                                    </address>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    <div class="pull-right">
+                        <ul class="pagination">
+                            <li class="active"><a href="#">1</a></li>
+                            <li><a href="#">2</a></li>
+                            <li><a href="#">3</a></li>
+                            <li><a href="#">4</a></li>
+                            <li><a href="#">5</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
+</div>
 </body>
+
+<script>
+    $(document).ready(function () {
+        $("#myInput").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#myTable tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+</script>
+<script>
+    function get_select_value(id) {
+        const result = $(':selected').val()
+        if (result === 'Shipping') {
+            path = '/order-shipping/' + id
+            $('#order_confirm_text').html('Please comfirm for shipping')
+            $('#confirm_btn_yes').attr('href', path)
+            $('#orderConfirm').modal('show')
+        } else if (result === 'Cancel') {
+            path = '/order-cancel/' + id
+            $('#order_confirm_text').html('Please comfirm for cancel')
+            $('#confirm_btn_yes').attr('href', path)
+            $('#orderConfirm').modal('show')
+        } else if (result === 'Complete') {
+            path = '/order-complete/' + id
+            $('#order_confirm_text').html('Please comfirm for complete')
+            $('#confirm_btn_yes').attr('href', path)
+            $('#orderConfirm').modal('show')
+        }
+
+    }
+
+    function view_waiting_order() {
+        $('#waiting').addClass('active')
+        $('#shipping').removeClass('active')
+        $('#cancel').removeClass('active')
+        $('#complete').removeClass('active')
+        $('#order_shipping').hide()
+        $('#order_cancel').hide()
+        $('#order_complete').hide()
+        $('#order_waiting').show()
+    }
+
+    function view_shipping_order() {
+        $('#waiting').removeClass('active')
+        $('#cancel').removeClass('active')
+        $('#complete').removeClass('active')
+        $('#shipping').addClass('active')
+        $('#order_cancel').hide()
+        $('#order_complete').hide()
+        $('#order_waiting').hide()
+        $('#order_shipping').show()
+    }
+
+    function view_cancel_order() {
+        $('#waiting').removeClass('active')
+        $('#complete').removeClass('active')
+        $('#shipping').removeClass('active')
+        $('#cancel').addClass('active')
+        $('#order_complete').hide()
+        $('#order_waiting').hide()
+        $('#order_shipping').hide()
+        $('#order_cancel').show()
+    }
+
+    function view_complete_order() {
+        $('#waiting').removeClass('active')
+        $('#shipping').removeClass('active')
+        $('#cancel').removeClass('active')
+        $('#complete').addClass('active')
+        $('#order_waiting').hide()
+        $('#order_shipping').hide()
+        $('#order_cancel').hide()
+        $('#order_complete').show()
+    }
+</script>
 </html>
+{% include 'manager/order_confirm.html' %}

@@ -17,36 +17,41 @@
         </tr>
         </thead>
         <tbody id="myTable">
-        {% for item in waiting_orders %}
+        {#        {% for item in waiting_orders %}#}
+        {#            <tr>#}
+        {#                <td>#}
+        {#                    <a href="{% url 'show-order-info' item.id %}">view detail</a>#}
+        {#                </td>#}
+        {#                <td>{{ item.id }}</td>#}
+        {#                <td>{{ item.created|date }}</td>#}
+        {#                <td style="max-width: 250px">#}
+        {#                    {{ item.user.first_name }} {{ item.user.last_name }}#}
+        {#                </td>#}
+        {#                <td>{{ item.total }}$</td>#}
+        {#                <td style="max-width: 250px">#}
+        {#                    <address>#}
+        {#                        number {{ item.address.number_address }}, {{ item.address.street }} street,#}
+        {#                        {{ item.address.ward }} ward, {{ item.address.district }} district,#}
+        {#                        {{ item.address.provice }} provide(city)#}
+        {#                    </address>#}
+        {#                </td>#}
+        {#                <td style="width: 400px">#}
+        {#                    <form action="" class="form-inline">#}
+        {#                        <select class="form-control" name="" id="">#}
+        {#                            <option value="" disabled selected>Waiting</option>#}
+        {#                            <option value="Shipping">Shipping</option>#}
+        {#                            <option value="Complete">Complete</option>#}
+        {#                            <option value="Cancel">Cancel</option>#}
+        {#                        </select>#}
+        {#                        <button class="btn btn-warning" type="reset">Cancel</button>#}
+        {#                        <button class="btn btn-success">Confirm</button>#}
+        {#                    </form>#}
+        {#                </td>#}
+        {#            </tr>#}
+        {#        {% endfor %}#}
+        {% for item in list_item %}
             <tr>
-                <td>
-                    <a href="{% url 'show-order-info' item.id %}">view detail</a>
-                </td>
-                <td>{{ item.id }}</td>
-                <td>{{ item.created|date }}</td>
-                <td style="max-width: 250px">
-                    {{ item.user.first_name }} {{ item.user.last_name }}
-                </td>
-                <td>{{ item.total }}$</td>
-                <td style="max-width: 250px">
-                    <address>
-                        number {{ item.address.number_address }}, {{ item.address.street }} street,
-                        {{ item.address.ward }} ward, {{ item.address.district }} district,
-                        {{ item.address.provice }} provide(city)
-                    </address>
-                </td>
-                <td style="width: 400px">
-                    <form action="" class="form-inline">
-                        <select class="form-control" name="" id="">
-                            <option value="" disabled selected>Waiting</option>
-                            <option value="Shipping">Shipping</option>
-                            <option value="Complete">Complete</option>
-                            <option value="Cancel">Cancel</option>
-                        </select>
-                        <button class="btn btn-warning" type="reset">Cancel</button>
-                        <button class="btn btn-success">Confirm</button>
-                    </form>
-                </td>
+               {{ item }}
             </tr>
         {% endfor %}
         </tbody>

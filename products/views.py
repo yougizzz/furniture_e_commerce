@@ -13,7 +13,7 @@ from .models import RegisterForm, UserAddress, UserProfile, UserAddressForm, Use
     ProductForm
 from order.models import Order, OrderItem, Cart
 from django.http import JsonResponse
-from django.core import serializers
+from django.db.models import Sum
 
 register = template.Library()
 
@@ -24,7 +24,6 @@ class Home(ListView):
 
 
 def home(request):
-    # return render(request, 'manager/manage_order.html')
     list_product = Product.objects.all()
     list_product = get_catalog(None)
     page = request.GET.get('page', 1)
@@ -52,7 +51,7 @@ def register(request):
             UserProfile.objects.create(user=user)
             raw_password = form.cleaned_data.get('password')
             user = authenticate(username=username, password=raw_password)
-            redirect('/login')
+            return render(request, 'register_success.html')
     else:
         # fields = UserCreationForm.Meta.fields + ('first_name', 'last_name', 'email',)
         form = RegisterForm()
@@ -127,6 +126,7 @@ def my_info(request, id):
                                             })
 
 
+@login_required
 def ShoppingCart(request):
     cart = Cart.objects.all()
     total = 0
@@ -224,6 +224,7 @@ def product_detail(request, name):
     return render(request, 'product_detail.html', {'product': item, 'product_related': related_product})
 
 
+@login_required
 def confirm_order(request, id_address):
     order = Order.objects.get_or_create(user=request.user, ordered=False, address_id=id_address)
     cart = Cart.objects.all()
@@ -238,11 +239,13 @@ def confirm_order(request, id_address):
     return render(request, 'order.html', {'order_item': order_item, 'total': total, 'order_id': order[0].id})
 
 
+@login_required
 def order_detail(request, id):
     item = OrderItem.objects.filter(order_id=id)
     return render(request, 'order_detail.html', {'order_item': item})
 
 
+@login_required
 def select_address(request):
     address = UserAddress.objects.filter(user=request.user)
     return render(request, 'address.html', {'address': address})
@@ -319,6 +322,7 @@ def search_product(request):
     return render(request, 'home.html', {'product': product, 'catalog': catalog, 'cart': cart, 'brand': brand})
 
 
+@login_required
 def cancel_order(request, id):
     page = '/my-info/' + str(request.user.id)
     order = Order.objects.get(id=id)
@@ -329,23 +333,32 @@ def cancel_order(request, id):
 
 @login_required
 def manager_page(request):
-    waiting_orders = Order.objects.filter(status='waiting')
-    return render(request, 'manager/manage_order.html', {'waiting_orders': waiting_orders})
+    waiting_orders = Order.objects.filter(status='Waiting')
+    shipping_order = Order.objects.filter(status='Shipping')
+    cancel_order = Order.objects.filter(status='Cancel')
+    complete_order = Order.objects.filter(status='Complete')
+    return render(request, 'manager/manage_order.html', {'waiting_orders': waiting_orders,
+                                                         'shipping_order': shipping_order,
+                                                         'cancel_order': cancel_order,
+                                                         'complete_order': complete_order})
 
 
+@login_required
 def show_order_detail(request, id):
     data = OrderItem.objects.filter(order_id=id)
     return render(request, 'manager/order_popup.html', {'order_detail': data})
 
 
+@login_required
 def manage_brand(request):
-    brand = Brand.objects.filter(active=True)
+    brand = Brand.objects.all()
     page = request.GET.get('page')
     paging = Paginator(brand, 10)
     list_brand = paging.get_page(page)
     return render(request, 'manager/manage_brand.html', {'brand': list_brand})
 
 
+@login_required
 def show_brand(request, id):
     brand = get_object_or_404(Brand, pk=id)
     brand_form = BrandForm(instance=brand)
@@ -358,6 +371,7 @@ def show_brand(request, id):
     return render(request, 'manager/brand.html', {'brand_form': brand_form, 'id': id, 'result': None})
 
 
+@login_required
 def modify_brand(request, id):
     brand = get_object_or_404(Brand, pk=id)
     if request.method == 'POST':
@@ -370,11 +384,13 @@ def modify_brand(request, id):
     return redirect('/brand')
 
 
+@login_required
 def create_brand(request):
     brand_form = BrandForm()
     return render(request, 'manager/brand.html', {'brand_form': brand_form, 'result': None})
 
 
+@login_required
 def execute_brand(request):
     if request.method == 'POST':
         form = BrandForm(request.POST)
@@ -386,20 +402,23 @@ def execute_brand(request):
     return redirect('create-brand')
 
 
+@login_required
 def manage_country(request):
-    countries = Country.objects.filter(active=True)
+    countries = Country.objects.all()
     page = request.GET.get('page')
     paging = Paginator(countries, 10)
     list_countries = paging.get_page(page)
     return render(request, 'manager/manage_country.html', {'countries': list_countries})
 
 
+@login_required
 def show_country(request, id):
     countries = get_object_or_404(Country, pk=id)
     country_form = CountryForm(instance=countries)
     return render(request, 'manager/country.html', {'country_form': country_form, 'id': id, 'result': None})
 
 
+@login_required
 def modify_country(request, id):
     countries = get_object_or_404(Country, pk=id)
     if request.method == 'POST':
@@ -412,11 +431,13 @@ def modify_country(request, id):
     return redirect('/country')
 
 
+@login_required
 def create_country(request):
     country_form = CountryForm()
     return render(request, 'manager/country.html', {'country_form': country_form, 'result': None})
 
 
+@login_required
 def execute_country(request):
     if request.method == 'POST':
         form = CountryForm(request.POST)
@@ -428,20 +449,23 @@ def execute_country(request):
     return redirect('create-country')
 
 
+@login_required
 def manage_category(request):
-    categories = Categories.objects.filter(active=True)
+    categories = Categories.objects.all()
     page = request.GET.get('page')
     paging = Paginator(categories, 10)
     list_categories = paging.get_page(page)
     return render(request, 'manager/manage_categories.html', {'categories': list_categories})
 
 
+@login_required
 def show_category(request, id):
     categories = get_object_or_404(Categories, pk=id)
     categories_form = CategoriesForm(instance=categories)
     return render(request, 'manager/categories.html', {'categories_form': categories_form, 'id': id, 'result': None})
 
 
+@login_required
 def modify_category(request, id):
     categories = get_object_or_404(Categories, pk=id)
     if request.method == 'POST':
@@ -454,11 +478,13 @@ def modify_category(request, id):
     return redirect('/categories')
 
 
+@login_required
 def create_category(request):
     categories_form = CategoriesForm()
     return render(request, 'manager/categories.html', {'categories_form': categories_form, 'result': None})
 
 
+@login_required
 def execute_category(request):
     if request.method == 'POST':
         form = CategoriesForm(request.POST)
@@ -470,20 +496,23 @@ def execute_category(request):
     return redirect('create-categories')
 
 
+@login_required
 def manage_material(request):
-    material = Material.objects.filter(active=True)
+    material = Material.objects.all()
     page = request.GET.get('page')
     paging = Paginator(material, 10)
     list_countries = paging.get_page(page)
     return render(request, 'manager/manage_material.html', {'material': list_countries})
 
 
+@login_required
 def show_material(request, id):
     material = get_object_or_404(Material, pk=id)
     material_form = MaterialForm(instance=material)
     return render(request, 'manager/material.html', {'material_form': material_form, 'id': id, 'result': None})
 
 
+@login_required
 def modify_material(request, id):
     material = get_object_or_404(Material, pk=id)
     if request.method == 'POST':
@@ -496,11 +525,13 @@ def modify_material(request, id):
     return redirect('/material')
 
 
+@login_required
 def create_material(request):
     material_form = MaterialForm()
     return render(request, 'manager/material.html', {'material_form': material_form, 'result': None})
 
 
+@login_required
 def execute_material(request):
     if request.method == 'POST':
         form = MaterialForm(request.POST)
@@ -512,20 +543,23 @@ def execute_material(request):
     return redirect('create-material')
 
 
+@login_required
 def manage_product(request):
-    product = Product.objects.filter(active=True)
+    product = Product.objects.all()
     page = request.GET.get('page')
-    paging = Paginator(product, 5)
+    paging = Paginator(product, 6)
     list_product = paging.get_page(page)
     return render(request, 'manager/manage_product.html', {'product': list_product})
 
 
+@login_required
 def show_product(request, id):
     product = get_object_or_404(Product, pk=id)
     product_form = ProductForm(instance=product)
     return render(request, 'manager/product.html', {'product_form': product_form, 'id': id, 'result': None})
 
 
+@login_required
 def modify_product(request, id):
     product = get_object_or_404(Product, pk=id)
     if request.method == 'POST':
@@ -546,11 +580,13 @@ def modify_product(request, id):
     return redirect('/product')
 
 
+@login_required
 def create_product(request):
     product_form = ProductForm()
     return render(request, 'manager/product.html', {'product_form': product_form, 'result': None})
 
 
+@login_required
 def execute_product(request):
     if request.method == 'POST':
         form = ProductForm(request.POST, request.FILES)
@@ -562,6 +598,7 @@ def execute_product(request):
     return redirect('create-product')
 
 
+@login_required
 def delete_brand(request, id):
     brand = get_object_or_404(Brand, pk=id)
     brand.active = False
@@ -569,6 +606,7 @@ def delete_brand(request, id):
     return redirect('manage-brand')
 
 
+@login_required
 def delete_material(request, id):
     material = get_object_or_404(Material, pk=id)
     material.active = False
@@ -576,6 +614,7 @@ def delete_material(request, id):
     return redirect('manage-material')
 
 
+@login_required
 def delete_country(request, id):
     country = get_object_or_404(Country, pk=id)
     country.active = False
@@ -583,14 +622,57 @@ def delete_country(request, id):
     return redirect('manage-country')
 
 
+@login_required
 def delete_categories(request, id):
     categories = get_object_or_404(Categories, pk=id)
     categories.active = False
     categories.save()
     return redirect('manage-categories')
 
+
+@login_required
 def delete_product(request, id):
     product = get_object_or_404(Product, pk=id)
     product.active = False
     product.save()
     return redirect('manage-product')
+
+
+@login_required
+def manage_user(request):
+    customer = User.objects.filter(is_staff=False, is_superuser=False)
+    page = request.GET.get('page')
+    paging = Paginator(customer, 10)
+    list_customer = paging.get_page(page)
+    return render(request, 'manager/manage_user.html', {'users': list_customer})
+
+
+@login_required
+def block_user(request, id):
+    user = get_object_or_404(User, pk=id)
+    user.is_active = False
+    user.save()
+    return redirect(manage_user)
+
+
+def set_shipping_order(request, id):
+    order = Order.objects.get(id=id)
+    order.status = 'Shipping'
+    order.save()
+    return redirect('manager-page')
+
+
+@login_required
+def set_cancel_order(request, id):
+    order = Order.objects.get(id=id)
+    order.status = 'Cancel'
+    order.save()
+    return redirect('manager-page')
+
+
+@login_required
+def set_complete_order(request, id):
+    order = Order.objects.get(id=id)
+    order.status = 'Complete'
+    order.save()
+    return redirect('manager-page')

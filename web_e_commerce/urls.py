@@ -8,7 +8,8 @@ from products.views import home, register, sigin, sigout, add_to_cart, remove_fr
     create_country, execute_country, show_country, manage_category, modify_category, create_category, \
     show_category, execute_category, manage_material, show_material, modify_material, create_material, \
     execute_material, manage_product, show_product, create_product, modify_product, execute_product, \
-    delete_brand, delete_categories, delete_country, delete_material, delete_product
+    delete_brand, delete_categories, delete_country, delete_material, delete_product, manage_user, block_user, \
+    set_cancel_order, set_complete_order, set_shipping_order
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -66,6 +67,11 @@ urlpatterns = [
                   path('material-delete/<id>', delete_material, name='delete-material'),
                   path('categories-delete/<id>', delete_categories, name='delete-categories'),
                   path('product-delete/<id>', delete_product, name='delete-product'),
+                  path('user/', manage_user, name='manage-user'),
+                  path('user-delete/<id>', block_user, name='delete-user'),
+                  path('order-shipping/<id>', set_shipping_order, name='order-shipping'),
+                  path('order-cancel/<id>', set_cancel_order, name='order-cancel'),
+                  path('order-complete/<id>', set_complete_order, name='order-complete'),
                   path('admin/', admin.site.urls),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

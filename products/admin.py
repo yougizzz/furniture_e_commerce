@@ -6,29 +6,29 @@ admin.site.site_header = 'Admin Web Furniture'
 
 class ImageAdmin(admin.ModelAdmin):
     list_display = ('name', 'code')
-    search_fields = ['name',]
+    search_fields = ['name']
 
 
 class MaterialAdmin(admin.ModelAdmin):
-    list_display = ('name', 'code')
+    list_display = ('name', 'code', 'active')
     list_per_page = 20
     search_fields = ['name', 'code']
 
 
 class CountryAdmin(admin.ModelAdmin):
-    list_display = ('name', 'code')
+    list_display = ('name', 'code', 'active')
     list_per_page = 20
     search_fields = ['name', 'code']
 
 
 class CategoriesAdmin(admin.ModelAdmin):
-    list_display = ('name', 'code')
+    list_display = ('name', 'code', 'active')
     search_fields = ['name', 'code']
     list_per_page = 20
 
 
 class BrandAdmin(admin.ModelAdmin):
-    list_display = ('name', 'code')
+    list_display = ('name', 'code', 'active')
     search_fields = ('name', 'code')
     list_per_page = 20
 
@@ -51,7 +51,7 @@ class CartAdmin(admin.ModelAdmin):
 
 class ProductAdmin(admin.ModelAdmin):
     list_per_page = 20
-    list_display = ('name', 'categories', 'brand', 'material', 'price', 'quantity')
+    list_display = ('name', 'categories', 'brand', 'material', 'price', 'quantity', 'active')
     search_fields = ['name',]
 
 

@@ -55,7 +55,7 @@
                                 <span class="ion-ios-search-strong"></span>
                             </button>
                         </div>
-                        {% if request.user.is_authenticated %}
+                        {% if request.user.is_authenticated and request.user.is_staff == False %}
                             <div class="header-cart common-style">
                                 <button class="sidebar-trigger">
                                     <span class="ion-bag"></span>
@@ -67,12 +67,19 @@
                                     <span class="ion-person"></span>
                                 </button>
                             </div>
+                        {% elif request.user.is_authenticated and request.user.is_staff %}
+                            <div class="header-sidebar common-style">
+                                <button>
+                                    <a href="/manager" class="ion-settings"></a>
+                                </button>
+                            </div>
+                        {% else %}
+                            <div class="header-sidebar common-style">
+                                <button class="header-navbar-active">
+                                    <span class="ion-navicon"></span>
+                                </button>
+                            </div>
                         {% endif %}
-                        <div class="header-sidebar common-style">
-                            <button class="header-navbar-active">
-                                <span class="ion-navicon"></span>
-                            </button>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -105,16 +112,16 @@
             <button class="op-sidebar-close"><span class="ion-android-close"></span></button>
         </div>
         <div class="cur-lang-acc-all">
-            <div class="single-currency-language-account">
-                <div class="cur-lang-acc-title">
-                    <h4>Currency: <span>USD </span></h4>
-                </div>
-                <div class="cur-lang-acc-dropdown">
-                    <ul>
-                        <li><a href="#">EUR Euro</a></li>
-                    </ul>
-                </div>
-            </div>
+            {#            <div class="single-currency-language-account">#}
+            {#                <div class="cur-lang-acc-title">#}
+            {#                    <h4>Currency: <span>USD </span></h4>#}
+            {#                </div>#}
+            {#                <div class="cur-lang-acc-dropdown">#}
+            {#                    <ul>#}
+            {#                        <li><a href="#">EUR Euro</a></li>#}
+            {#                    </ul>#}
+            {#                </div>#}
+            {#            </div>#}
             <div class="single-currency-language-account">
                 <div class="cur-lang-acc-title">
                     <h4>Language: <span><img src="{% static 'assets/img/icon-img/english.png' %}"
