@@ -17,20 +17,39 @@
         {% include 'manager/sidebar.html' %}
         <div class="col-sm-10">
             <div style="margin-top: 15px">
-                <ul class="nav nav-tabs">
-                    <li role="presentation" class="active"><a href="#">Order Waiting</a></li>
-                    <li role="presentation"><a href="#">Order Shipping</a></li>
-                    <li role="presentation"><a href="#">Oder Complete</a></li>
-                    <li role="presentation"><a href="#">Oder Cancel</a></li>
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="active">
+                        <a data-toggle="tab" id="waiting-tab" data-toggle="tab" href="#waiting" role="tab" aria-controls="waiting" aria-selected="true">Order Waiting</a  id="waiting-tab">
+                    </li>
+                    <li class="nav-item">
+                        <a data-toggle="tab" id="shipping-tab" data-toggle="tab" href="#shipping" role="tab" aria-controls="shipping" aria-selected="false">Order Shipping</a  id="shipping-tab">
+                    </li>
+                    <li class="nav-item">
+                        <a data-toggle="tab" id="complete-tab" data-toggle="tab" href="#complete" role="tab" aria-controls="complete" aria-selected="false">Order Complete</a  id="complete-tab">
+                    </li>
+                    <li class="nav-item">
+                        <a data-toggle="tab" id="cancel-tab" data-toggle="tab" href="#cancel" role="tab" aria-controls="cancel" aria-selected="false">Order Cancel</a  id="cancel-tab">
+                    </li>
                 </ul>
-            </div>
-
-            <div>
-                {% include 'manager/order_waiting.html' %}
+            </div>            
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade in active" id="waiting" role="tabpanel" aria-labelledby="waiting-tab">{% include 'manager/order_waiting.html' %}</div>
+                <div class="tab-pane fade" id="shipping" role="tabpanel" aria-labelledby="shipping-tab">{% include 'manager/order_shipping.html' %}</div>
+                <div class="tab-pane fade" id="complete" role="tabpanel" aria-labelledby="complete-tab">{% include 'manager/order_complete.html' %}</div>
+                <div class="tab-pane fade" id="cancel" role="tabpanel" aria-labelledby="cancel-tab">{% include 'manager/order_cancel.html' %}</div>                
             </div>
         </div>
     </div>
 </div>
 </body>
 </html>
+
 {% include 'manager/order_popup.html' %}
+<script>
+    $(function () {
+      $('#myTab li:first-child a').tab('show')
+      
+    })
+</script>
+
+{% include 'manager/manager_confirm_order.html' %}

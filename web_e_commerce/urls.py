@@ -3,7 +3,8 @@ from django.urls import path, include
 from products.views import home, register, sigin, sigout, add_to_cart, remove_from_cart, \
     ShoppingCart, product_modal, product_detail, confirm_order, my_info, update_info, \
     update_address, delete_address, check_out, select_address, order_detail, filter_catalog, \
-    filter_brand, search_product, cancel_order, manager_page
+    filter_brand, search_product, cancel_order, manager_page, manager_shipping_order, manager_cancel_order, manager_complete_order, \
+    show_order_detail
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -29,7 +30,11 @@ urlpatterns = [
                   path('product/brand/<id_brand>', filter_brand, name='filter-brand-product'),
                   path('search/product', search_product, name='search-product'),
                   path('cancel-order/<id>', cancel_order, name='cancel-order'),
-                  path('manager/', manager_page, name='manager-page'),
+                  path('manager/', manager_page, name='manager-page'),                  
+                  path('manager-shipping-order/<id>', manager_shipping_order, name="manager-shipping-order"),
+                  path('manager-complete-order/<id>', manager_complete_order, name="manager-complete-order"),
+                  path('manager-cancel-order/<id>', manager_cancel_order, name="manager-cancel-order"),
+                  path('show-order-detail/<id>', show_order_detail, name="show_order_detail"),
                   path('admin/', admin.site.urls),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

@@ -15,7 +15,7 @@
         </thead>
         <tbody id="myTable">
           {% for item in order %}
-            {% if item.status == 'waiting' %}
+            {% if item.status == 'shipping' %}
                 <tr>
                 <td>{{ item.id }}</td>
                 <td>{{ item.created }}</td>
@@ -40,12 +40,7 @@
                 </td>
                 <td style="width: 400px">
                     <form action="" class="form-inline" method="post">
-                        <!-- <select onchange="get_select_value" class="form-control" name="manager_select" id="selected_option">                          
-                            <option value="Waiting"disabled selected>Waiting</option>
-                            <option value="Shipping">Shipping</option>
-                            <option value="Cancel">Cancel</option>
-                        </select> -->                        
-                        <button style="background-color:#008CBA; font-weight: bold;" background-color="#4CAF50" data-toggle="modal" type="button" data-target="#orderConfirm" class="btn btn-dark" onclick="manager_shipping({{ item.id }})">Shipping</button>
+                        <button style="background-color:#008CBA; font-weight: bold;" background-color="#4CAF50" data-toggle="modal" type="button" data-target="#orderConfirm" class="btn btn-dark" onclick="manager_complete({{ item.id }})">Complete</button>
                         <button style="background-color:#f44336; font-weight: bold;" data-toggle="modal" type="button" data-target="#orderConfirm" class="btn btn-dark" onclick="manager_cancel({{ item.id }})">Cancel</button>
                     </form>
                 </td>
@@ -80,9 +75,9 @@
         $("#order_detail_content").text(id)
     }
 
-    function manager_shipping(id) {
-        let confirm_href = "/manager-shipping-order/" + id
-        $("#content_confirm").text("Do you want to Ship this Order?")
+    function manager_complete(id) {
+        let confirm_href = "/manager-complete-order/" + id
+        $("#content_confirm").text("Do you want to Complete this Order?")
         $("#yes_btn").attr("href", confirm_href)
     }
 
@@ -91,8 +86,5 @@
         $("#content_confirm").text("Do you want to cancel this Order?")
         $("#yes_btn").attr("href", confirm_href)
     }
-
-    
   </script>
 
-  

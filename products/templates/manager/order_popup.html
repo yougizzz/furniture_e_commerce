@@ -4,27 +4,30 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">ORDER DETAIL</h4>
+                <h4 class="modal-title">HAHA</h4>
             </div>
             <div class="modal-body">
                 <p id="order_detail_content"></p>
                 <table class="table">
-                    <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Price</th>
-                        <th>Quantity</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>Table</td>
-                        <td>250$</td>
-                        <td>3</td>
-                    </tr>
-                    </tbody>
+                    {% for item in order_detail %}
+                        {% if item.id == order_detail_content}
+                        <thead>
+                            <tr>
+                                <th>{{ item.quantity }}</th>
+                                <th>Name</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>Table</td>
+                                <td>250$</td>
+                                <td>3</td>
+                            </tr>
+                        </tbody>
+                    {% endfor %}
                 </table>
             </div>
             <div class="modal-footer">

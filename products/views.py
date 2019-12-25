@@ -68,7 +68,7 @@ def sigin(request):
                 return redirect('/')
             elif user and user.is_staff and user.is_superuser is False:
                 login(request, user)
-                return redirect(request, manager_page)
+                return redirect('/manager')
     form = AuthenticationForm()
     return render(request=request,
                   template_name="login.html",
@@ -325,4 +325,40 @@ def cancel_order(request, id):
 
 @login_required
 def manager_page(request):
-    return render(request, 'manager/manage_order.html')
+    order = Order.objects.all()
+    address = UserAddress.objects.all()
+    order_detail = OrderItem.objects.all()
+
+    return render(request, 'manager/manage_order.html', {'order': order,
+                                                        'address': address,
+        
+                                                        'order_detail': order_detail})
+
+@login_required
+def manager_shipping_order(request, id):      
+    order = Order.objects.get(id=id)
+    order.status = "shipping"
+    order.save()
+    return redirect('/manager/')
+
+@login_required
+def manager_complete_order(request, id):      
+    order = Order.objects.get(id=id)
+    order.status = "complete"
+    order.save()
+    return redirect('/manager/')
+
+@login_required
+def manager_cancel_order(request, id):      
+    order = Order.objects.get(id=id)
+    order.status = "cancel"
+    order.save()
+    return redirect('/manager/')
+
+@login_required
+def show_order_detail(request, id):      
+    order = OrderItem.objects.filter(order_id=id) 
+    
+    return render(request, 'manager/order_detail.html', {'order_item': order,
+                                                        })
+

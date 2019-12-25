@@ -1,0 +1,10 @@
+/web_e_commerce/__pycache__
+/order/__pycache__
+/order/migrations
+/products/__pycache__
+/products/migrations
+/media
+/myenv
+/myenv/**
+.vscode/settings.json
+.vscode/launch.json
