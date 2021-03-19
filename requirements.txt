@@ -17,7 +17,7 @@ django-modelcluster==4.4
 django-registration-redux==1.1
 django-taggit==0.24.0
 django-treebeard==4.3
-djangorestframework==3.10.3
+djangorestframework==3.11.2
 dnspython==1.16.0
 dominate==2.4.0
 draftjs-exporter==2.1.7
